@@ -13,6 +13,8 @@ A small xhr wrapper
         headers: {
             "Content-Type": "application/json"
         }
+    }, function (err, result) {
+        // this === xhr
     })
 
 ## MIT Licenced
