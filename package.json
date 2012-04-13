@@ -1,6 +1,6 @@
 {
     "name": "xhr", 
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "small xhr abstraction", 
     "author": "Raynos <raynos2@gmail.com>",
     "dependencies": {

@@ -5,10 +5,10 @@ createXHR.defaults = {}
 module.exports = createXHR
 
 function createXHR(options, callback) {
-    var options = extend({}, createXHR.defaults, options)
+    options = extend({}, createXHR.defaults, options)
     var xhr = new XMLHttpRequest
     xhr.onreadystatechange = function () {
-        if (this.readystate === 4) {
+        if (this.readyState === 4) {
             callback.call(this, null, this.response || 
                 this.responseText || this.responseXML)
         }
