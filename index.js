@@ -1,4 +1,8 @@
-var extend = require("pd").extend
+var extend = require("xtend")
+    , once = require("once")
+    , Base = window.XDomainRequest ?
+        window.XDomainRequest :
+        window.XMLHttpRequest
 
 createXHR.defaults = {}
 
@@ -6,22 +10,38 @@ module.exports = createXHR
 
 function createXHR(options, callback) {
     options = extend({}, createXHR.defaults, options)
-    var xhr = new XMLHttpRequest
-    xhr.onreadystatechange = function () {
-        if (this.readyState === 4) {
-            callback.call(this, null, this.response || 
-                this.responseText || this.responseXML)
-        }
-    }
-    xhr.onerror = function (evt) {
-        callback.call(this, evt)
-    }
+    callback = once(callback)
+
+    var xhr = new Base()
+        , load = call(xhr, callback)
+
+    xhr.onreadystatechange = readystatechange
+    xhr.onload = load
+    xhr.onerror = error
     xhr.open(options.method, options.uri)
-    if (options.headers) {
+
+    if (options.headers && xhr.setRequestHeader) {
         Object.keys(options.headers).forEach(function (key) {
             xhr.setRequestHeader(key, options.headers[key])
         })
     }
+
     xhr.send(options.data)
+
     return xhr
+
+    function readystatechange() {
+        this.readyState === 4 && load()
+    }
+
+    function error(evt) {
+        callback.call(this, evt)
+    }
+}
+
+function call(self, callback) {
+    return function () {
+        callback.call(self, null, self.response ||
+            self.responseText || self.responseXML)
+    }
 }
