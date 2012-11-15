@@ -4,16 +4,16 @@
   "description": "small xhr abstraction",
   "keywords": [],
   "author": "Raynos <raynos2@gmail.com>",
-  "repository": "git://github.com/Raynos/to-array.git",
+  "repository": "git://github.com/Raynos/xhr.git",
   "main": "index",
-  "homepage": "https://github.com/Raynos/to-array",
+  "homepage": "https://github.com/Raynos/xhr",
   "contributors": [
     {
       "name": "Jake Verbaten"
     }
   ],
   "bugs": {
-    "url": "https://github.com/Raynos/to-array/issues",
+    "url": "https://github.com/Raynos/xhr/issues",
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
@@ -26,7 +26,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://github.com/Raynos/to-array/raw/master/LICENSE"
+      "url": "http://github.com/Raynos/xhr/raw/master/LICENSE"
     }
   ],
   "scripts": {
