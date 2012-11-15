@@ -25,6 +25,9 @@ function createXHR(options, callback) {
     xhr.onreadystatechange = readystatechange
     xhr.onload = load
     xhr.onerror = error
+    xhr.onprogress = noop
+    xhr.ontimeout = noop
+    xhr.timeout = "timeout" in options ? options.timeout : 5000
     xhr.open(options.method, options.uri)
 
     if (options.headers && xhr.setRequestHeader) {
@@ -33,9 +36,13 @@ function createXHR(options, callback) {
         })
     }
 
-    xhr.send(options.data)
+    process.nextTick(send)
 
     return xhr
+
+    function send() {
+        xhr.send(options.data)
+    }
 
     function readystatechange() {
         this.readyState === 4 && load()
@@ -71,3 +78,5 @@ function callWithStatus(self, callback) {
             self.responseText || self.responseXML)
     }
 }
+
+function noop() {}
