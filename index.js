@@ -1,5 +1,11 @@
 var extend = require("xtend")
     , once = require("once")
+
+    , messages = {
+        "0": "Internal XMLHttpRequest Error"
+        , "4": "4xx Client Error"
+        , "5": "5xx Server Error"
+    }
     , Base = window.XDomainRequest ?
         window.XDomainRequest :
         window.XMLHttpRequest
@@ -13,7 +19,8 @@ function createXHR(options, callback) {
     callback = once(callback)
 
     var xhr = new Base()
-        , load = call(xhr, callback)
+        , load = options.status === false ? call(xhr, callback) :
+            callWithStatus(xhr, callback)
 
     xhr.onreadystatechange = readystatechange
     xhr.onload = load
@@ -41,6 +48,25 @@ function createXHR(options, callback) {
 
 function call(self, callback) {
     return function () {
+        callback.call(self, null, self.response ||
+            self.responseText || self.responseXML)
+    }
+}
+
+function callWithStatus(self, callback) {
+    return function () {
+        if (self.status === 0 ||
+            (self.status > 400 && self.status < 600)
+        ) {
+            var message = self.responseText ||
+                    messages[String(self.status).charAt(0)]
+                , error = new Error(message)
+
+            error.statusCode = self.status
+
+            return callback.call(self, error)
+        }
+
         callback.call(self, null, self.response ||
             self.responseText || self.responseXML)
     }
