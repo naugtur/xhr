@@ -1,3 +1,4 @@
+/*global window*/
 var extend = require("xtend")
     , once = require("once")
 
@@ -25,7 +26,10 @@ function createXHR(options, callback) {
     xhr.onreadystatechange = readystatechange
     xhr.onload = load
     xhr.onerror = error
-    xhr.onprogress = noop
+    // IE9 must have onprogress be set to a unique function.
+    xhr.onprogress = function () {
+        // IE must die
+    }
     xhr.ontimeout = noop
     xhr.timeout = "timeout" in options ? options.timeout : 5000
     xhr.open(options.method, options.uri)
