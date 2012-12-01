@@ -50,8 +50,8 @@ function createXHR(options, callback) {
         // IE must die
     }
     xhr.ontimeout = noop
-    xhr.timeout = "timeout" in options ? options.timeout : 5000
     xhr.open(options.method, uri)
+    xhr.timeout = "timeout" in options ? options.timeout : 5000
 
     if (options.headers && xhr.setRequestHeader) {
         Object.keys(options.headers).forEach(function (key) {
