@@ -1,6 +1,6 @@
 {
   "name": "xhr",
-  "version": "0.4.0",
+  "version": "0.3.4",
   "description": "small xhr abstraction",
   "keywords": [],
   "author": "Raynos <raynos2@gmail.com>",
