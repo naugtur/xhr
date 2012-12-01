@@ -35,6 +35,13 @@ Your callback will be called with an [`Error`][5] if the
 Specify the method the [`XMLHttpRequest`][3] should be opened
     with. Passed to [`xhr.open`][2]
 
+### `options.cors`
+
+Specify whether this is a cross domain request. Used in IE<10
+    to use `XDomainRequest` instead of `XMLHttpRequest`. If not
+    specified the library will pick `XDomainRequest` if the uri
+    has a protocol.
+
 ### `options.data`
 
 Pass in data to be send across the [`XMLHttpRequest`][3].

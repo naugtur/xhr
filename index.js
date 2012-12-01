@@ -2,14 +2,17 @@
 var extend = require("xtend")
     , once = require("once")
 
+    , protocolLess = /^\/\/[^\/]+\//
+    , hasProtocol = /^https?:\/\//
     , messages = {
         "0": "Internal XMLHttpRequest Error"
         , "4": "4xx Client Error"
         , "5": "5xx Server Error"
     }
-    , Base = window.XDomainRequest ?
-        window.XDomainRequest :
-        window.XMLHttpRequest
+    , XHR = window.XMLHttpRequest
+    , XDR = "withCredentials" in (new XHR()) ?
+        window.XMLHttpRequest : window.XDomainRequest
+
 
 createXHR.defaults = {}
 
@@ -19,8 +22,24 @@ function createXHR(options, callback) {
     options = extend({}, createXHR.defaults, options)
     callback = once(callback)
 
-    var xhr = new Base()
-        , load = options.status === false ? call(xhr, callback) :
+    var xhr
+        , uri = options.uri
+
+    if ("cors" in options) {
+        if (options.cors) {
+            xhr = new XDR()
+        } else {
+            xhr = new XHR()
+        }
+    } else {
+        if (protocolLess.test(uri) || hasProtocol.test(uri)) {
+            xhr = new XDR()
+        } else {
+            xhr = new XHR()
+        }
+    }
+
+    var load = options.status === false ? call(xhr, callback) :
             callWithStatus(xhr, callback)
 
     xhr.onreadystatechange = readystatechange
@@ -32,7 +51,7 @@ function createXHR(options, callback) {
     }
     xhr.ontimeout = noop
     xhr.timeout = "timeout" in options ? options.timeout : 5000
-    xhr.open(options.method, options.uri)
+    xhr.open(options.method, uri)
 
     if (options.headers && xhr.setRequestHeader) {
         Object.keys(options.headers).forEach(function (key) {
