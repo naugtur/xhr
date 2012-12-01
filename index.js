@@ -59,13 +59,9 @@ function createXHR(options, callback) {
         })
     }
 
-    process.nextTick(send)
+    xhr.send(options.data)
 
     return xhr
-
-    function send() {
-        xhr.send(options.data)
-    }
 
     function readystatechange() {
         this.readyState === 4 && load()
