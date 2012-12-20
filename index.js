@@ -9,10 +9,10 @@ var extend = require("xtend")
         , "4": "4xx Client Error"
         , "5": "5xx Server Error"
     }
-    , XHR = window.XMLHttpRequest
+    , _window = typeof window === "undefined" ? {} : window
+    , XHR = _window.XMLHttpRequest || noop
     , XDR = "withCredentials" in (new XHR()) ?
-        window.XMLHttpRequest : window.XDomainRequest
-
+        _window.XMLHttpRequest : _window.XDomainRequest
 
 createXHR.defaults = {}
 
