@@ -82,7 +82,7 @@ function call(self, callback) {
 function callWithStatus(self, callback) {
     return function () {
         if (self.status === 0 ||
-            (self.status > 400 && self.status < 600)
+            (self.status >= 400 && self.status < 600)
         ) {
             var message = self.responseText ||
                     messages[String(self.status).charAt(0)]
