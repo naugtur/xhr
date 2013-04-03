@@ -90,7 +90,8 @@ function callWithStatus(self, callback) {
 
             error.statusCode = self.status
 
-            return callback.call(self, error)
+            return callback.call(self, error, self.response ||
+                self.responseText || self.responseXML)
         }
 
         callback.call(self, null, self.response ||
