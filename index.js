@@ -28,12 +28,14 @@ function createXHR(options, callback) {
     if ("cors" in options) {
         if (options.cors) {
             xhr = new XDR()
+            xhr.withCredentials = true
         } else {
             xhr = new XHR()
         }
     } else {
         if (protocolLess.test(uri) || hasProtocol.test(uri)) {
             xhr = new XDR()
+            xhr.withCredentials = true
         } else {
             xhr = new XHR()
         }
