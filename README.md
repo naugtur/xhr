@@ -22,8 +22,9 @@ A small xhr wrapper
 the returned object is either an [`XMLHttpRequest`][3] instance
     or an [`XDomainRequest`][4] instance (if on IE8/IE9)
 
-Your callback will be called once with either an [`Error`][5]
-    or a valid `result`. The result will be either
+Your callback will be called once with the arguments ( [`Error`][5]
+    , `response` , `body` ) where response is the context of the xhr request
+    and body will be either
     [`xhr.response`][6], [`xhr.responseText`][7] or
     [`xhr.responseXML`][8] depending on the request type.
 
