@@ -76,7 +76,7 @@ function createXHR(options, callback) {
 
 function call(self, callback) {
     return function () {
-        callback.call(self, null, self.response ||
+        callback.call(self, null, self, self.response ||
             self.responseText || self.responseXML)
     }
 }
@@ -92,11 +92,11 @@ function callWithStatus(self, callback) {
 
             error.statusCode = self.status
 
-            return callback.call(self, error, self.response ||
+            return callback.call(self, error, self, self.response ||
                 self.responseText || self.responseXML)
         }
 
-        callback.call(self, null, self.response ||
+        callback.call(self, null, self, self.response ||
             self.responseText || self.responseXML)
     }
 }
