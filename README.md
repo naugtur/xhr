@@ -7,52 +7,62 @@ A small xhr wrapper
     var xhr = require("xhr")
 
     xhr({
-        method: "GET",
-        data: someJSON,
+        body: someJSONString,
         uri: "/foo",
         headers: {
             "Content-Type": "application/json"
         }
-    }, function (err, result) {
-        // this === xhr
+    }, function (err, resp, body) {
+        // resp === xhr
+        // check resp.body or resp.statusCode
     })
 
 ## `var req = xhr(options, callback)`
 
-the returned object is either an [`XMLHttpRequest`][3] instance
-    or an [`XDomainRequest`][4] instance (if on IE8/IE9)
+```js
+type XhrOptions = String | {
+    cors: Boolean?,
+    uri: String,
+    method: String?,
+    timeout: Number?,
+    headers: Object?,
+    body: String?
+}
+xhr := (XhrOptions, Callback<Response>) => Request
+```
 
-Your callback will be called once with the arguments ( [`Error`][5]
-    , `response` , `body` ) where response is the context of the xhr request
-    and body will be either
+the returned object is either an [`XMLHttpRequest`][3] instance
+    or an [`XDomainRequest`][4] instance (if on IE8/IE9 &&
+    `options.cors` is set to `true`)
+
+Your callback will be called once with the arguments
+    ( [`Error`][5], `response` , `body` ) where response is a
+    response object containing { statusCode, body } and other
+    properties of the XHR request and body will be either
     [`xhr.response`][6], [`xhr.responseText`][7] or
     [`xhr.responseXML`][8] depending on the request type.
 
 Your callback will be called with an [`Error`][5] if the
     resulting status of the request is either `0`, `4xx` or `5xx`
 
+If `options` is a string then it's a short hand for
+    `{ method: "GET", uri: string }`
+
 ### `options.method`
 
 Specify the method the [`XMLHttpRequest`][3] should be opened
-    with. Passed to [`xhr.open`][2]
+    with. Passed to [`xhr.open`][2]. Defaults to "GET"
 
 ### `options.cors`
 
 Specify whether this is a cross domain request. Used in IE<10
-    to use `XDomainRequest` instead of `XMLHttpRequest`. If not
-    specified the library will pick `XDomainRequest` if the uri
-    has a protocol.
+    to use `XDomainRequest` instead of `XMLHttpRequest`.
 
-### `options.data`
+### `options.body`
 
-Pass in data to be send across the [`XMLHttpRequest`][3].
+Pass in body to be send across the [`XMLHttpRequest`][3].
     Generally should be a string. But anything that's valid as
     a parameter to [`xhr.send`][1] should work
-
-### `options.status`
-
-Set this to `false` if you do not want this module to turn
-    a status code of 4xx, 5xx or 0 into an error.
 
 ### `options.uri`
 
@@ -63,6 +73,11 @@ The uri to send a request too. Passed to
 
 An object of headers that should be set on the request. The
     key, value pair is passed to [`xhr.setRequestHeader`][9]
+
+### `options.timeout`
+
+A numeric timeout to use for this xhr request. Defaults to 5
+    seconds.
 
 ## MIT Licenced
 

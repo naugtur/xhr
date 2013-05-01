@@ -1,48 +1,37 @@
 /*global window*/
 var extend = require("xtend")
-    , once = require("once")
+var once = require("once")
 
-    , protocolLess = /^\/\/[^\/]+\//
-    , hasProtocol = /^https?:\/\//
-    , messages = {
-        "0": "Internal XMLHttpRequest Error"
-        , "4": "4xx Client Error"
-        , "5": "5xx Server Error"
-    }
-    , _window = typeof window === "undefined" ? {} : window
-    , XHR = _window.XMLHttpRequest || noop
-    , XDR = "withCredentials" in (new XHR()) ?
+var messages = {
+    "0": "Internal XMLHttpRequest Error",
+    "4": "4xx Client Error",
+    "5": "5xx Server Error"
+}
+
+var _window = typeof window === "undefined" ? {} : window
+var XHR = _window.XMLHttpRequest || noop
+var XDR = "withCredentials" in (new XHR()) ?
         _window.XMLHttpRequest : _window.XDomainRequest
-
-createXHR.defaults = {}
 
 module.exports = createXHR
 
 function createXHR(options, callback) {
-    options = extend({}, createXHR.defaults, options)
+    if (typeof options === "string") {
+        options = { uri: options }
+    }
+
+    options = options || {}
     callback = once(callback)
 
     var xhr
-        , uri = options.uri
+    var uri = options.uri
 
-    if ("cors" in options) {
-        if (options.cors) {
-            xhr = new XDR()
-            xhr.withCredentials = true
-        } else {
-            xhr = new XHR()
-        }
+    if (options.cors) {
+        xhr = new XDR()
+        xhr.withCredentials = true
     } else {
-        if (protocolLess.test(uri) || hasProtocol.test(uri)) {
-            xhr = new XDR()
-            xhr.withCredentials = true
-        } else {
-            xhr = new XHR()
-        }
+        xhr = new XHR()
     }
-
-    var load = options.status === false ? call(xhr, callback) :
-            callWithStatus(xhr, callback)
 
     xhr.onreadystatechange = readystatechange
     xhr.onload = load
@@ -52,7 +41,7 @@ function createXHR(options, callback) {
         // IE must die
     }
     xhr.ontimeout = noop
-    xhr.open(options.method, uri)
+    xhr.open(options.method || "GET", uri)
     xhr.timeout = "timeout" in options ? options.timeout : 5000
 
     if (options.headers && xhr.setRequestHeader) {
@@ -66,39 +55,29 @@ function createXHR(options, callback) {
     return xhr
 
     function readystatechange() {
-        this.readyState === 4 && load()
+        xhr.readyState === 4 && load()
+    }
+
+    function load() {
+        var error = null
+        var status = xhr.statusCode = xhr.status
+        xhr.body = xhr.response || xhr.responseText || xhr.responseXML
+
+        if (status === 0 || (status >= 400 && status < 600)) {
+            var message = xhr.responseText ||
+                messages[String(xhr.status).charAt(0)]
+            error = new Error(message)
+
+            error.statusCode = xhr.status
+        }
+
+        callback(error, xhr, xhr.body)
     }
 
     function error(evt) {
-        callback.call(this, evt)
+        callback(evt, xhr)
     }
 }
 
-function call(self, callback) {
-    return function () {
-        callback.call(self, null, self, self.response ||
-            self.responseText || self.responseXML)
-    }
-}
-
-function callWithStatus(self, callback) {
-    return function () {
-        if (self.status === 0 ||
-            (self.status >= 400 && self.status < 600)
-        ) {
-            var message = self.responseText ||
-                    messages[String(self.status).charAt(0)]
-                , error = new Error(message)
-
-            error.statusCode = self.status
-
-            return callback.call(self, error, self, self.response ||
-                self.responseText || self.responseXML)
-        }
-
-        callback.call(self, null, self, self.response ||
-            self.responseText || self.responseXML)
-    }
-}
 
 function noop() {}
