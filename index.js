@@ -50,7 +50,7 @@ function createXHR(options, callback) {
         })
     }
 
-    xhr.send(options.data)
+    xhr.send(options.body || options.data)
 
     return xhr
 
