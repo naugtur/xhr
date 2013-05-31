@@ -26,7 +26,8 @@ type XhrOptions = String | {
     method: String?,
     timeout: Number?,
     headers: Object?,
-    body: String?
+    body: String?,
+    json: Object?
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
@@ -78,6 +79,14 @@ An object of headers that should be set on the request. The
 
 A numeric timeout to use for this xhr request. Defaults to 5
     seconds.
+
+### `options.json`
+
+A valid JSON serializable value to be send to the server. If this
+    is set then we serialize the value and use that as the body.
+    We also set the Content-Type to `"application/json"`.
+
+Additionally the response body is parsed as JSON
 
 ## MIT Licenced
 

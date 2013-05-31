@@ -1,5 +1,4 @@
-/*global window*/
-var extend = require("xtend")
+var window = require("global/window")
 var once = require("once")
 
 var messages = {
@@ -8,10 +7,9 @@ var messages = {
     "5": "5xx Server Error"
 }
 
-var _window = typeof window === "undefined" ? {} : window
-var XHR = _window.XMLHttpRequest || noop
+var XHR = window.XMLHttpRequest || noop
 var XDR = "withCredentials" in (new XHR()) ?
-        _window.XMLHttpRequest : _window.XDomainRequest
+        window.XMLHttpRequest : window.XDomainRequest
 
 module.exports = createXHR
 
@@ -24,13 +22,24 @@ function createXHR(options, callback) {
     callback = once(callback)
 
     var xhr
-    var uri = options.uri
 
     if (options.cors) {
         xhr = new XDR()
         xhr.withCredentials = true
     } else {
         xhr = new XHR()
+    }
+
+    var uri = xhr.url = options.uri
+    var method = xhr.method = options.method || "GET"
+    var body = options.body || options.data
+    var headers = xhr.headers = options.headers || {}
+    var isJson = false
+
+    if ("json" in options) {
+        isJson = true
+        headers["Content-Type"] = "application/json"
+        body = JSON.stringify(options.json)
     }
 
     xhr.onreadystatechange = readystatechange
@@ -40,28 +49,32 @@ function createXHR(options, callback) {
     xhr.onprogress = function () {
         // IE must die
     }
+    // hate IE
     xhr.ontimeout = noop
-    xhr.open(options.method || "GET", uri)
+    xhr.open(method, uri)
     xhr.timeout = "timeout" in options ? options.timeout : 5000
 
-    if (options.headers && xhr.setRequestHeader) {
-        Object.keys(options.headers).forEach(function (key) {
-            xhr.setRequestHeader(key, options.headers[key])
+    if ( xhr.setRequestHeader) {
+        Object.keys(headers).forEach(function (key) {
+            xhr.setRequestHeader(key, headers[key])
         })
     }
 
-    xhr.send(options.body || options.data)
+    xhr.send(body)
 
     return xhr
 
     function readystatechange() {
-        xhr.readyState === 4 && load()
+        if (xhr.readyState === 4) {
+            load()
+        }
     }
 
     function load() {
         var error = null
         var status = xhr.statusCode = xhr.status
-        xhr.body = xhr.response || xhr.responseText || xhr.responseXML
+        var body = xhr.body = xhr.response ||
+            xhr.responseText || xhr.responseXML
 
         if (status === 0 || (status >= 400 && status < 600)) {
             var message = xhr.responseText ||
@@ -71,7 +84,13 @@ function createXHR(options, callback) {
             error.statusCode = xhr.status
         }
 
-        callback(error, xhr, xhr.body)
+        if (isJson) {
+            try {
+                body = xhr.body = JSON.parse(body)
+            } catch (e) {}
+        }
+
+        callback(error, xhr, body)
     }
 
     function error(evt) {
