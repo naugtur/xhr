@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "once": "~1.1.1",
-    "xtend": "~1.0.3"
+    "process": "~0.5.1"
   },
   "devDependencies": {
     "tap": "~0.3.1"
