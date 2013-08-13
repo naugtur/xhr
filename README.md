@@ -4,18 +4,20 @@ A small xhr wrapper
 
 ## Example
 
-    var xhr = require("xhr")
+```js
+var xhr = require("xhr")
 
-    xhr({
-        body: someJSONString,
-        uri: "/foo",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }, function (err, resp, body) {
-        // resp === xhr
-        // check resp.body or resp.statusCode
-    })
+xhr({
+    body: someJSONString,
+    uri: "/foo",
+    headers: {
+        "Content-Type": "application/json"
+    }
+}, function (err, resp, body) {
+    // resp === xhr
+    // check resp.body or resp.statusCode
+})
+```
 
 ## `var req = xhr(options, callback)`
 
