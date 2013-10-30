@@ -25,7 +25,6 @@ function createXHR(options, callback) {
 
     if (options.cors) {
         xhr = new XDR()
-        xhr.withCredentials = true
     } else {
         xhr = new XHR()
     }
@@ -52,6 +51,9 @@ function createXHR(options, callback) {
     // hate IE
     xhr.ontimeout = noop
     xhr.open(method, uri)
+    if (options.cors) {
+        xhr.withCredentials = true
+    }
     xhr.timeout = "timeout" in options ? options.timeout : 5000
 
     if ( xhr.setRequestHeader) {
