@@ -65,7 +65,9 @@ Specify whether this is a cross domain request. Used in IE<10
 ### `options.sync`
 
 Specify whether this is a synchrounous request. Note that when
-    this is true the callback will be called synchronously.
+    this is true the callback will be called synchronously. In
+    most cases this option should not be used. Only use if you
+    know what you are doing!
 
 ### `options.body`
 
