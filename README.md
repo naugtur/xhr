@@ -24,6 +24,7 @@ xhr({
 ```js
 type XhrOptions = String | {
     cors: Boolean?,
+    sync: Boolean?,
     uri: String,
     method: String?,
     timeout: Number?,
@@ -61,6 +62,13 @@ Specify the method the [`XMLHttpRequest`][3] should be opened
 Specify whether this is a cross domain request. Used in IE<10
     to use `XDomainRequest` instead of `XMLHttpRequest`.
 
+### `options.sync`
+
+Specify whether this is a synchrounous request. Note that when
+    this is true the callback will be called synchronously. In
+    most cases this option should not be used. Only use if you
+    know what you are doing!
+
 ### `options.body`
 
 Pass in body to be send across the [`XMLHttpRequest`][3].
@@ -80,7 +88,7 @@ An object of headers that should be set on the request. The
 ### `options.timeout`
 
 A numeric timeout to use for this xhr request. Defaults to 5
-    seconds.
+    seconds. Ignored when `options.sync` is true.
 
 ### `options.json`
 
