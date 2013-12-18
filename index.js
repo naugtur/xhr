@@ -33,6 +33,7 @@ function createXHR(options, callback) {
     var method = xhr.method = options.method || "GET"
     var body = options.body || options.data
     var headers = xhr.headers = options.headers || {}
+    var sync = !!options.sync
     var isJson = false
 
     if ("json" in options) {
@@ -50,11 +51,14 @@ function createXHR(options, callback) {
     }
     // hate IE
     xhr.ontimeout = noop
-    xhr.open(method, uri)
+    xhr.open(method, uri, !sync)
     if (options.cors) {
         xhr.withCredentials = true
     }
-    xhr.timeout = "timeout" in options ? options.timeout : 5000
+    // Cannot set timeout with sync request
+    if (!sync) {
+        xhr.timeout = "timeout" in options ? options.timeout : 5000
+    }
 
     if ( xhr.setRequestHeader) {
         Object.keys(headers).forEach(function (key) {
