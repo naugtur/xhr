@@ -21,11 +21,11 @@ function createXHR(options, callback) {
     options = options || {}
     callback = once(callback)
 
-    var xhr
+    var xhr = options.xhr || null
 
-    if (options.cors) {
+    if (!xhr && options.cors) {
         xhr = new XDR()
-    } else {
+    } else if (!xhr) {
         xhr = new XHR()
     }
 
