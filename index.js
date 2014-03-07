@@ -29,7 +29,7 @@ function createXHR(options, callback) {
         xhr = new XHR()
     }
 
-    var uri = xhr.url = options.uri
+    var uri = xhr.url = options.uri || options.url;
     var method = xhr.method = options.method || "GET"
     var body = options.body || options.data
     var headers = xhr.headers = options.headers || {}
