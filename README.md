@@ -26,6 +26,7 @@ type XhrOptions = String | {
     cors: Boolean?,
     sync: Boolean?,
     uri: String,
+    url: String,
     method: String?,
     timeout: Number?,
     headers: Object?,
@@ -75,10 +76,9 @@ Pass in body to be send across the [`XMLHttpRequest`][3].
     Generally should be a string. But anything that's valid as
     a parameter to [`xhr.send`][1] should work
 
-### `options.uri`
+### `options.uri` or `options.url`
 
-The uri to send a request too. Passed to
-    [`xhr.open`][2]
+The uri to send a request too. Passed to [`xhr.open`][2]. `options.url` and `options.uri` are aliases for each other.
 
 ### `options.headers`
 
