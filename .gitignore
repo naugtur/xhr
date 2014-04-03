@@ -1,3 +1,4 @@
 node_modules
 *.log
 *.err
+.DS_Store
