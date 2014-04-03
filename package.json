@@ -2,7 +2,13 @@
   "name": "xhr",
   "version": "1.4.1",
   "description": "small xhr abstraction",
-  "keywords": ["xhr", "http", "xmlhttprequest", "xhr2", "browserify"],
+  "keywords": [
+    "xhr",
+    "http",
+    "xmlhttprequest",
+    "xhr2",
+    "browserify"
+  ],
   "author": "Raynos <raynos2@gmail.com>",
   "repository": "git://github.com/Raynos/xhr.git",
   "main": "index",
@@ -21,8 +27,7 @@
     "global": "~2.0.7"
   },
   "devDependencies": {
-    "beefy": "^1.1.0",
-    "browserify": "^3.38.0",
+    "run-browser": "git://github.com/Raynos/run-browser",
     "tape": "^2.12.2"
   },
   "licenses": [
@@ -32,6 +37,23 @@
     }
   ],
   "scripts": {
-    "test": "beefy test/test.js"
+    "test": "run-browser test/index.js -b | tap-spec",
+    "browser": "run-browser test/index.js"
+  },
+  "testling": {
+    "files": "test/*.js",
+    "browsers": [
+      "ie/8..latest",
+      "firefox/17..latest",
+      "firefox/nightly",
+      "chrome/22..latest",
+      "chrome/canary",
+      "opera/12..latest",
+      "opera/next",
+      "safari/5.1..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest",
+      "android-browser/4.2..latest"
+    ]
   }
 }
