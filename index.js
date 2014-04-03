@@ -66,6 +66,10 @@ function createXHR(options, callback) {
         })
     }
 
+    if ("responseType" in options) {
+        xhr.responseType = options.responseType
+    }
+
     xhr.send(body)
 
     return xhr
