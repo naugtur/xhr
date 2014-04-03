@@ -2,6 +2,8 @@
 
 A small xhr wrapper
 
+[![browser support](https://ci.testling.com/raynos/xhr.png)](https://ci.testling.com/Raynos/xhr)
+
 ## Example
 
 ```js
