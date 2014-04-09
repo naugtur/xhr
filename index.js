@@ -86,6 +86,10 @@ function createXHR(options, callback) {
         var body = xhr.body = xhr.response ||
             xhr.responseText || xhr.responseXML
 
+        if (status === 1223) {
+            status = 204
+        }
+
         if (status === 0 || (status >= 400 && status < 600)) {
             var message = xhr.responseText ||
                 messages[String(xhr.status).charAt(0)]
