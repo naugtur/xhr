@@ -38,8 +38,10 @@ function createXHR(options, callback) {
 
     if ("json" in options) {
         isJson = true
-        headers["Content-Type"] = "application/json"
-        body = JSON.stringify(options.json)
+        if (method !== "GET" && method !== "HEAD") {
+            headers["Content-Type"] = "application/json"
+            body = JSON.stringify(options.json)
+        }
     }
 
     xhr.onreadystatechange = readystatechange
@@ -60,7 +62,7 @@ function createXHR(options, callback) {
         xhr.timeout = "timeout" in options ? options.timeout : 5000
     }
 
-    if ( xhr.setRequestHeader) {
+    if (xhr.setRequestHeader) {
         Object.keys(headers).forEach(function (key) {
             xhr.setRequestHeader(key, headers[key])
         })
@@ -70,7 +72,10 @@ function createXHR(options, callback) {
         xhr.responseType = options.responseType
     }
 
-    xhr.send(body)
+    if (method !== "GET" && method !== "HEAD")
+        xhr.send(body)
+    else
+        xhr.send()
 
     return xhr
 
