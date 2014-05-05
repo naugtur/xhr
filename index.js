@@ -72,7 +72,10 @@ function createXHR(options, callback) {
         xhr.responseType = options.responseType
     }
 
-    xhr.send(body)
+    if (method !== "GET" && method !== "HEAD")
+        xhr.send(body)
+    else
+        xhr.send()
 
     return xhr
 
