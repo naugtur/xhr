@@ -7,9 +7,26 @@ var messages = {
     "5": "5xx Server Error"
 }
 
+var requestQueue = null;
 var XHR = window.XMLHttpRequest || noop
 var XDR = "withCredentials" in (new XHR()) ?
         window.XMLHttpRequest : window.XDomainRequest
+
+createXHR.unloadCleanup = function unloadCleanup() {
+    if (window.attachEvent) {
+        requestQueue = [];
+        
+        window.attachEvent('onunload', unloadHandler)
+    }
+}
+
+function unloadHandler() {
+    for (var i = 0; i < requestQueue.length; i++) {
+        if (requestQueue[i].abort) {
+            requestQueue[i].abort()
+        }
+    }
+}
 
 module.exports = createXHR
 
@@ -73,6 +90,10 @@ function createXHR(options, callback) {
     }
 
     xhr.send(body)
+    
+    if (requestQueue) {
+        requestQueue.push(xhr)
+    }
 
     return xhr
 
@@ -106,10 +127,20 @@ function createXHR(options, callback) {
             } catch (e) {}
         }
 
+        if (requestQueue) {
+            var index = requestQueue.indexOf(xhr)
+            requestQueue.slice(index, 1)
+        }
+
         callback(error, xhr, body)
     }
 
     function error(evt) {
+        if (requestQueue) {
+            var index = requestQueue.indexOf(xhr)
+            requestQueue.slice(index, 1)
+        }
+        
         callback(evt, xhr)
     }
 }
