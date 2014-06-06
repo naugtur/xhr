@@ -39,6 +39,7 @@ function createXHR(options, callback) {
 
     if ("json" in options) {
         isJson = true
+        headers["Accept"] = "application/json"
         if (method !== "GET" && method !== "HEAD") {
             headers["Content-Type"] = "application/json"
             body = JSON.stringify(options.json)
