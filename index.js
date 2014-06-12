@@ -53,6 +53,12 @@ function createXHR(options, callback) {
     xhr.onprogress = function () {
         // IE must die
     }
+    
+    // xhr.upload.onprogress must be bound BEFORE xhr.send
+    if (options.onUploadProgress) {
+      if (xhr.upload) xhr.upload.onprogress = options.onUploadProgress
+    }
+
     // hate IE
     xhr.ontimeout = noop
     xhr.open(method, uri, !sync)
