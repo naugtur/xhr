@@ -97,8 +97,13 @@ function createXHR(options, callback) {
         }
 
         if (status === 0 || (status >= 400 && status < 600)) {
-            var message = xhr.responseText ||
-                messages[String(xhr.status).charAt(0)]
+            var message;
+            try{
+            message = xhr.responseText;
+            }catch(e){
+                // accessing xhr.responseText can throw errors when xhr.responseType is changed
+            }
+            message = message || messages[String(xhr.status).charAt(0)];
             error = new Error(message)
 
             error.statusCode = xhr.status
