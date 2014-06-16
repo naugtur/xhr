@@ -89,15 +89,21 @@ function createXHR(options, callback) {
     function load() {
         var error = null
         var status = xhr.statusCode = xhr.status
-        var body = xhr.body = xhr.response ||
-            xhr.responseText || xhr.responseXML
+        // Chrome with requestType=blob throws errors arround when even testing access to responseText
+        var body = null
+
+        if (xhr.response) {
+            body = xhr.body = xhr.response
+        } else if (xhr.responseType === 'text' || xhr.responseType === '') {
+            body = xhr.body = xhr.responseText || xhr.responseXML
+        }
 
         if (status === 1223) {
             status = 204
         }
 
         if (status === 0 || (status >= 400 && status < 600)) {
-            var message = xhr.responseText ||
+            var message = (typeof body === "string" ? body : false) ||
                 messages[String(xhr.status).charAt(0)]
             error = new Error(message)
 
