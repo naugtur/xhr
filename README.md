@@ -33,7 +33,8 @@ type XhrOptions = String | {
     timeout: Number?,
     headers: Object?,
     body: String?,
-    json: Object?
+    json: Object?,
+    withCredentials: Boolean?
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
@@ -100,6 +101,12 @@ A valid JSON serializable value to be send to the server. If this
 
 Additionally the response body is parsed as JSON
 
+### `options.withCredentials`
+
+Specify whether user credentials are to be included in a cross-origin
+    request. Sets [`xhr.withCredentials`][10].
+
+
 ## MIT Licenced
 
   [1]: http://xhr.spec.whatwg.org/#the-send()-method
@@ -111,3 +118,4 @@ Additionally the response body is parsed as JSON
   [7]: http://xhr.spec.whatwg.org/#the-responsetext-attribute
   [8]: http://xhr.spec.whatwg.org/#the-responsexml-attribute
   [9]: http://xhr.spec.whatwg.org/#the-setrequestheader()-method
+  [10]: http://xhr.spec.whatwg.org/#the-withcredentials-attribute

@@ -20,3 +20,18 @@ test("can GET current page", function(assert) {
     })
 })
 
+test("withCredentials option", function(assert) {
+    var req = xhr({}, function () {})
+    assert.ok(
+        !req.withCredentials,
+        "withCredentials not set when not set in options"
+    )
+    req = xhr({
+        withCredentials: true
+    }, function () {})
+    assert.ok(
+        req.withCredentials,
+        "withCredentials set to true when true in options"
+    )
+    assert.end()
+})

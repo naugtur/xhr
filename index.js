@@ -56,9 +56,11 @@ function createXHR(options, callback) {
     // hate IE
     xhr.ontimeout = noop
     xhr.open(method, uri, !sync)
-    if (options.cors) {
-        xhr.withCredentials = true
+
+    if ("withCredentials" in options) {
+        xhr.withCredentials = options.withCredentials
     }
+
     // Cannot set timeout with sync request
     if (!sync) {
         xhr.timeout = "timeout" in options ? options.timeout : 5000
