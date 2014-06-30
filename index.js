@@ -100,7 +100,7 @@ function createXHR(options, callback) {
 
         if (xhr.response) {
             body = xhr.body = xhr.response
-        } else if (xhr.responseType === 'text' || xhr.responseType === '') {
+        } else if (xhr.responseType === 'text' || !xhr.responseType) {
             body = xhr.body = xhr.responseText || xhr.responseXML
         }
 
