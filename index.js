@@ -57,8 +57,8 @@ function createXHR(options, callback) {
     xhr.ontimeout = noop
     xhr.open(method, uri, !sync)
 
-    if ("withCredentials" in options) {
-        xhr.withCredentials = options.withCredentials
+    if (options.cors && options.withCredentials !== false) {
+        xhr.withCredentials = true
     }
 
     // Cannot set timeout with sync request

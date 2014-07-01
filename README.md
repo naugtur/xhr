@@ -104,7 +104,8 @@ Additionally the response body is parsed as JSON
 ### `options.withCredentials`
 
 Specify whether user credentials are to be included in a cross-origin
-    request. Sets [`xhr.withCredentials`][10].
+    request. Sets [`xhr.withCredentials`][10]. Defaults to true
+    when `options.cors` is true.
 
 
 ## MIT Licenced
