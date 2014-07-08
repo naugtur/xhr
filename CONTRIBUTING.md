@@ -1,4 +1,4 @@
-# LevelUP is an OPEN Open Source Project
+# XHR is an OPEN Open Source Project
 
 -----------------------------------------
 
