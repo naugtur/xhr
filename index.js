@@ -112,11 +112,12 @@ function createXHR(options, callback) {
 
         if (status === 0 || (status >= 400 && status < 600)) {
             var message = (typeof body === "string" ? body : false) ||
-                messages[String(xhr.status).charAt(0)]
+                messages[String(status).charAt(0)]
             error = new Error(message)
-
-            error.statusCode = xhr.status
+            error.statusCode = status
         }
+        
+        xhr.status = xhr.statusCode = status;
 
         if (isJson) {
             try {
