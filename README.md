@@ -107,6 +107,9 @@ Specify whether user credentials are to be included in a cross-origin
     request. Sets [`xhr.withCredentials`][10]. Defaults to true
     when `options.cors` is true.
 
+A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `withCredentials` is true. 
+    The header needs to specify your origin explicitly or browser will abort the request.
+    
 
 ## MIT Licenced
 
