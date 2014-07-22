@@ -27,7 +27,7 @@
     "global": "~2.0.7"
   },
   "devDependencies": {
-    "run-browser": "git://github.com/Raynos/run-browser",
+    "run-browser": "^1.3.1",
     "tap-spec": "^0.1.8",
     "tape": "^2.12.2"
   },
