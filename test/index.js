@@ -43,3 +43,27 @@ test("withCredentials option", function(assert) {
     )
     assert.end()
 })
+
+test("XDR usage (run on IE8 or 9)", function(assert) {
+    var req = xhr({
+        useXDR: true,
+        uri: window.location.href,
+    }, function () {})
+    
+    assert.ok(
+        !window.XDomainRequest || window.XDomainRequest === req.constructor,
+        "Uses XDR when told to"
+    )
+    
+    req = xhr({
+        cors: true,
+        uri: window.location.href,
+    }, function () {})
+    
+    assert.ok(
+        !window.XDomainRequest || window.XDomainRequest === req.constructor,
+        "Uses XDR with deprecated option cors"
+    )
+    
+    assert.end()
+})

@@ -25,7 +25,7 @@ xhr({
 
 ```js
 type XhrOptions = String | {
-    cors: Boolean?,
+    useXDR: Boolean?,
     sync: Boolean?,
     uri: String,
     url: String,
@@ -41,7 +41,7 @@ xhr := (XhrOptions, Callback<Response>) => Request
 
 the returned object is either an [`XMLHttpRequest`][3] instance
     or an [`XDomainRequest`][4] instance (if on IE8/IE9 &&
-    `options.cors` is set to `true`)
+    `options.useXDR` is set to `true`)
 
 Your callback will be called once with the arguments
     ( [`Error`][5], `response` , `body` ) where response is a
@@ -61,10 +61,11 @@ If `options` is a string then it's a short hand for
 Specify the method the [`XMLHttpRequest`][3] should be opened
     with. Passed to [`xhr.open`][2]. Defaults to "GET"
 
-### `options.cors`
+### `options.useXDR`
 
-Specify whether this is a cross domain request. Used in IE<10
-    to use `XDomainRequest` instead of `XMLHttpRequest`.
+Specify whether this is a cross origin (CORS) request for IE<10.
+    Switches IE to use [`XDomainRequest`][4] instead of `XMLHttpRequest`.
+    Ignored in other browsers.
 
 ### `options.sync`
 
@@ -104,8 +105,10 @@ Additionally the response body is parsed as JSON
 ### `options.withCredentials`
 
 Specify whether user credentials are to be included in a cross-origin
-    request. Sets [`xhr.withCredentials`][10]. Defaults to true
-    when `options.cors` is true.
+    request. Sets [`xhr.withCredentials`][10]. 
+    
+For backward-compatibility defaults to true
+    when deprecated `options.cors` is also true.
 
 A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `withCredentials` is true. 
     The header needs to specify your origin explicitly or browser will abort the request.
