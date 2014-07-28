@@ -23,7 +23,11 @@ function createXHR(options, callback) {
     var xhr = options.xhr || null
 
     if (!xhr) {
-        xhr = new ((options.cors || options.useXDR) ? XDR : XHR)()
+        if (options.cors || options.useXDR) {
+            xhr = new XDR()
+        }else{
+            xhr = new XHR()
+        }
     }
 
     var uri = xhr.url = options.uri || options.url;
@@ -70,7 +74,7 @@ function createXHR(options, callback) {
             }
         }
     } else {
-        options.headers && console && console.warn("XDR doesn't support custom headers in requests")
+        options.headers || throw new Error("Headers cannot be set on an XDomainRequest object");
     }
 
     if ("responseType" in options) {

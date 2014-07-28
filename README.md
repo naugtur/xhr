@@ -66,6 +66,8 @@ Specify the method the [`XMLHttpRequest`][3] should be opened
 Specify whether this is a cross origin (CORS) request for IE<10.
     Switches IE to use [`XDomainRequest`][4] instead of `XMLHttpRequest`.
     Ignored in other browsers.
+    
+Note that headers cannot be set on an XDomainRequest instance.
 
 ### `options.sync`
 
@@ -105,7 +107,7 @@ Additionally the response body is parsed as JSON
 ### `options.withCredentials`
 
 Specify whether user credentials are to be included in a cross-origin
-    request. Sets [`xhr.withCredentials`][10]. 
+    request. Sets [`xhr.withCredentials`][10]. Defaults to false.
     
 For backward-compatibility defaults to true
     when deprecated `options.cors` is also true.
