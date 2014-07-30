@@ -8,8 +8,7 @@ var messages = {
 }
 
 var XHR = window.XMLHttpRequest || noop
-var XDR = "withCredentials" in (new XHR()) ?
-        window.XMLHttpRequest : window.XDomainRequest
+var XDR = "withCredentials" in (new XHR()) ? XHR : window.XDomainRequest
 
 module.exports = createXHR
 
@@ -23,10 +22,12 @@ function createXHR(options, callback) {
 
     var xhr = options.xhr || null
 
-    if (!xhr && options.cors) {
-        xhr = new XDR()
-    } else if (!xhr) {
-        xhr = new XHR()
+    if (!xhr) {
+        if (options.cors || options.useXDR) {
+            xhr = new XDR()
+        }else{
+            xhr = new XHR()
+        }
     }
 
     var uri = xhr.url = options.uri || options.url;
@@ -56,8 +57,8 @@ function createXHR(options, callback) {
     // hate IE
     xhr.ontimeout = noop
     xhr.open(method, uri, !sync)
-
-    if (options.cors && options.withCredentials !== false) {
+                                    //backward compatibility
+    if (options.withCredentials || (options.cors && options.withCredentials !== false)) {
         xhr.withCredentials = true
     }
 
@@ -72,6 +73,8 @@ function createXHR(options, callback) {
                 xhr.setRequestHeader(key, headers[key])
             }
         }
+    } else {
+        options.headers || throw new Error("Headers cannot be set on an XDomainRequest object");
     }
 
     if ("responseType" in options) {
