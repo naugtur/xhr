@@ -73,8 +73,8 @@ function createXHR(options, callback) {
                 xhr.setRequestHeader(key, headers[key])
             }
         }
-    } else {
-        options.headers || throw new Error("Headers cannot be set on an XDomainRequest object");
+    } else if (options.headers) {
+        throw new Error("Headers cannot be set on an XDomainRequest object");
     }
 
     if ("responseType" in options) {
