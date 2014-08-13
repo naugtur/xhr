@@ -1,6 +1,6 @@
 # xhr
 
-A small xhr wrapper
+A small xhr wrapper. Designed for use with [browserify](http://browserify.org/).
 
 [![browser support](https://ci.testling.com/raynos/xhr.png)](https://ci.testling.com/Raynos/xhr)
 
