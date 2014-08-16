@@ -16,7 +16,6 @@ xhr({
         "Content-Type": "application/json"
     }
 }, function (err, resp, body) {
-    // resp === xhr
     // check resp.body or resp.statusCode
 })
 ```
@@ -45,8 +44,7 @@ the returned object is either an [`XMLHttpRequest`][3] instance
 
 Your callback will be called once with the arguments
     ( [`Error`][5], `response` , `body` ) where response is a
-    response object containing { statusCode, body } and other
-    properties of the XHR request and body will be either
+    response object containing { statusCode, body } and body will be either
     [`xhr.response`][6], [`xhr.responseText`][7] or
     [`xhr.responseXML`][8] depending on the request type.
 
