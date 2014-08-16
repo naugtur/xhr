@@ -16,6 +16,9 @@ test("can GET current page", function(assert) {
         uri: window.location.href,
     }, function (err, resp, body) {
         assert.ifError(err, "no err")
+        assert.equal(resp.statusCode, 200)
+        assert.notEqual(resp.body.length, 0)
+        assert.notEqual(body.length)
         assert.end()
     })
 })
