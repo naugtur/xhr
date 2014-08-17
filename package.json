@@ -23,8 +23,9 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
+    "global": "~2.0.7",
     "once": "~1.1.1",
-    "global": "~2.0.7"
+    "parse-headers": "^1.0.2"
   },
   "devDependencies": {
     "pre-commit": "0.0.9",

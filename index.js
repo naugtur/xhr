@@ -1,5 +1,6 @@
 var window = require("global/window")
 var once = require("once")
+var parseHeaders = require('parse-headers')
 
 var messages = {
     "0": "Internal XMLHttpRequest Error",
@@ -99,7 +100,13 @@ function createXHR(options, callback) {
 
     function load() {
         var error = null
-        var response = { body: null, statusCode: null }
+        var response = {
+            body: null,
+            statusCode: null,
+            statusText: xhr.statusText,
+            headers: parseHeaders(xhr.getAllResponseHeaders())
+        }
+
         var status = response.statusCode = xhr.status
         // Chrome with requestType=blob throws errors arround when even testing access to responseText
         var body = null
@@ -139,3 +146,11 @@ function createXHR(options, callback) {
 
 
 function noop() {}
+
+function parseHeaders(headers) {
+    var response = {}
+
+    
+
+    return response
+}

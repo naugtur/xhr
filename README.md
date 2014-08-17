@@ -16,7 +16,7 @@ xhr({
         "Content-Type": "application/json"
     }
 }, function (err, resp, body) {
-    // check resp.body or resp.statusCode
+    // resp has attributes body, statusCode, statusText & headers
 })
 ```
 
