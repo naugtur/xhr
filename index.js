@@ -146,11 +146,3 @@ function createXHR(options, callback) {
 
 
 function noop() {}
-
-function parseHeaders(headers) {
-    var response = {}
-
-    
-
-    return response
-}
