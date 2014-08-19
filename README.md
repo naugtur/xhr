@@ -17,7 +17,8 @@ xhr({
     }
 }, function (err, resp, body) {
     // resp === xhr
-    // check resp.body or resp.statusCode})
+    // check resp.body or resp.statusCode
+})
 ```
 
 ## `var req = xhr(options, callback)`
