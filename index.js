@@ -38,6 +38,7 @@ function createXHR(options, callback) {
     var sync = !!options.sync
     var isJson = false
     var key
+    var load = options.response ? loadResponse : loadXhr
 
     if ("json" in options) {
         isJson = true
@@ -98,45 +99,66 @@ function createXHR(options, callback) {
         }
     }
 
-    function load() {
-        var error = null
-        var response = {
-            body: null,
-            statusCode: null,
-            statusText: xhr.statusText,
-            headers: parseHeaders(xhr.getAllResponseHeaders())
-        }
-
-        var status = response.statusCode = xhr.status
+    function getBody() {
         // Chrome with requestType=blob throws errors arround when even testing access to responseText
         var body = null
 
         if (xhr.response) {
-            body = response.body = xhr.response
+            body = xhr.response
         } else if (xhr.responseType === 'text' || !xhr.responseType) {
-            body = response.body = xhr.responseText || xhr.responseXML
+            body = xhr.responseText || xhr.responseXML
         }
 
-        if (status === 1223) {
-            status = 204
+        if (isJson) {
+            try {
+                body = JSON.parse(body)
+            } catch (e) {}
         }
 
+        return body
+    }
+
+    function getStatusCode() {
+        return xhr.status === 1223 ? 204 : xhr.status
+    }
+
+    // if we're getting a none-ok statusCode, build & return an error
+    function errorFromStatusCode(status) {
+        var error = null
         if (status === 0 || (status >= 400 && status < 600)) {
             var message = (typeof body === "string" ? body : false) ||
                 messages[String(status).charAt(0)]
             error = new Error(message)
             error.statusCode = status
-        }
-        
-        response.statusCode = status;
+        };
 
-        if (isJson) {
-            try {
-                body = response.body = JSON.parse(body)
-            } catch (e) {}
-        }
+        return error;
+    }
 
-        callback(error, response, body)
+    // will load the data & process the response in a special response object
+    function loadResponse() {
+        var status = getStatusCode();
+        var error = errorFromStatusCode(status);
+        var response = {
+            body: getBody(),
+            statusCode: status,
+            statusText: xhr.statusText,
+            headers: parseHeaders(xhr.getAllResponseHeaders())
+        };
+
+        callback(error, response, response.body);
+    }
+
+    // will load the data and add some response properties to the source xhr
+    // and then respond with that
+    function loadXhr() {
+        var status = xhr.statusCode = xhr.status = getStatusCode()
+        var error = errorFromStatusCode(status)
+
+        xhr.status = xhr.statusCode = status;
+        xhr.body = getBody();
+
+        callback(error, xhr, xhr.body);
     }
 
     function error(evt) {

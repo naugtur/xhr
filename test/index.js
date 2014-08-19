@@ -16,6 +16,17 @@ test("can GET current page", function(assert) {
         uri: window.location.href,
     }, function (err, resp, body) {
         assert.ifError(err, "no err")
+        assert.end()
+    })
+})
+
+test("can GET current page with response option = true", function(assert) {
+    xhr({
+        headers: {accept: "text/html"},
+        uri: window.location.href,
+        response: true
+    }, function (err, resp, body) {
+        assert.ifError(err, "no err")
         assert.equal(resp.statusCode, 200)
         assert.equal(resp.statusText, 'OK')
         assert.equal(resp.headers['content-type'], 'text/html')
