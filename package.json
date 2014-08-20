@@ -1,6 +1,6 @@
 {
   "name": "xhr",
-  "version": "1.14.1",
+  "version": "1.15.0",
   "description": "small xhr abstraction",
   "keywords": [
     "xhr",
