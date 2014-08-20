@@ -152,7 +152,7 @@ function createXHR(options, callback) {
     // will load the data and add some response properties to the source xhr
     // and then respond with that
     function loadXhr() {
-        var status = xhr.statusCode = xhr.status = getStatusCode()
+        var status = getStatusCode()
         var error = errorFromStatusCode(status)
 
         xhr.status = xhr.statusCode = status;
