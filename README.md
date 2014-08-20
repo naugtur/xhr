@@ -34,19 +34,18 @@ type XhrOptions = String | {
     headers: Object?,
     body: String?,
     json: Object?,
-    withCredentials: Boolean?
+    withCredentials: Boolean?,
+    response: Boolean?
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
-
 the returned object is either an [`XMLHttpRequest`][3] instance
     or an [`XDomainRequest`][4] instance (if on IE8/IE9 &&
     `options.useXDR` is set to `true`)
 
 Your callback will be called once with the arguments
-    ( [`Error`][5], `response` , `body` ) where response is a
-    response object containing { statusCode, body } and other
-    properties of the XHR request and body will be either
+    ( [`Error`][5], `response` , `body` ) where the response is depending on
+    `options.response` and body will be either
     [`xhr.response`][6], [`xhr.responseText`][7] or
     [`xhr.responseXML`][8] depending on the request type.
 
@@ -60,6 +59,12 @@ If `options` is a string then it's a short hand for
 
 Specify the method the [`XMLHttpRequest`][3] should be opened
     with. Passed to [`xhr.open`][2]. Defaults to "GET"
+
+### `options.response`
+Specify the format of the response. Defaults to return the xhr/xdr-object
+    with body & status-properties added. When set to `true` a special response
+    object is returned that includes parsed response headers, status & body.
+    `options.response` must be set to `true` for IE8 support.
 
 ### `options.useXDR`
 

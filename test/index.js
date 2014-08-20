@@ -20,6 +20,22 @@ test("can GET current page", function(assert) {
     })
 })
 
+test("can GET current page with response option = true", function(assert) {
+    xhr({
+        headers: {accept: "text/html"},
+        uri: window.location.href,
+        response: true
+    }, function (err, resp, body) {
+        assert.ifError(err, "no err")
+        assert.equal(resp.statusCode, 200)
+        assert.equal(resp.statusText, 'OK')
+        assert.equal(resp.headers['content-type'], 'text/html')
+        assert.notEqual(resp.body.length, 0)
+        assert.notEqual(body.length, 0)
+        assert.end()
+    })
+})
+
 test("withCredentials option", function(assert) {
     var req = xhr({}, function () {})
     assert.ok(
