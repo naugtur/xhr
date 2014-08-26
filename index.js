@@ -31,7 +31,7 @@ function createXHR(options, callback) {
         }
     }
 
-    var uri = xhr.url = options.uri || options.url;
+    var uri = xhr.url = options.uri || options.url
     var method = xhr.method = options.method || "GET"
     var body = options.body || options.data
     var headers = xhr.headers = options.headers || {}
@@ -76,7 +76,7 @@ function createXHR(options, callback) {
             }
         }
     } else if (options.headers) {
-        throw new Error("Headers cannot be set on an XDomainRequest object");
+        throw new Error("Headers cannot be set on an XDomainRequest object")
     }
 
     if ("responseType" in options) {
@@ -130,23 +130,26 @@ function createXHR(options, callback) {
                 messages[String(status).charAt(0)]
             error = new Error(message)
             error.statusCode = status
-        };
+        }
 
-        return error;
+        return error
     }
 
     // will load the data & process the response in a special response object
     function loadResponse() {
-        var status = getStatusCode();
-        var error = errorFromStatusCode(status);
+        var status = getStatusCode()
+        var error = errorFromStatusCode(status)
         var response = {
             body: getBody(),
             statusCode: status,
             statusText: xhr.statusText,
-            headers: parseHeaders(xhr.getAllResponseHeaders())
-        };
+            raw: xhr
+        }
+        if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
+            response.headers = parseHeaders(xhr.getAllResponseHeaders())
+        }
 
-        callback(error, response, response.body);
+        callback(error, response, response.body)
     }
 
     // will load the data and add some response properties to the source xhr
@@ -155,10 +158,11 @@ function createXHR(options, callback) {
         var status = getStatusCode()
         var error = errorFromStatusCode(status)
 
-        xhr.status = xhr.statusCode = status;
-        xhr.body = getBody();
+        xhr.status = xhr.statusCode = status
+        xhr.body = getBody()
+        xhr.headers = parseHeaders(xhr.getAllResponseHeaders())
 
-        callback(error, xhr, xhr.body);
+        callback(error, xhr, xhr.body)
     }
 
     function error(evt) {

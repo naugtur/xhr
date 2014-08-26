@@ -63,6 +63,7 @@ test("withCredentials option", function(assert) {
 test("XDR usage (run on IE8 or 9)", function(assert) {
     var req = xhr({
         useXDR: true,
+        response:true,
         uri: window.location.href,
     }, function () {})
     
