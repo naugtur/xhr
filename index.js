@@ -147,6 +147,8 @@ function createXHR(options, callback) {
         }
         if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
             response.headers = parseHeaders(xhr.getAllResponseHeaders())
+        } else {
+            response.headers = {}
         }
 
         callback(error, response, response.body)
