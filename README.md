@@ -62,8 +62,8 @@ Specify the method the [`XMLHttpRequest`][3] should be opened
 
 ### `options.response`
 Specify the format of the response. Defaults to return the xhr/xdr-object
-    with body & status-properties added. When set to `true` a special response
-    object is returned that includes parsed response headers, status & body.
+    with body, headers and status-properties added. When set to `true` a special response
+    object is returned that includes parsed response headers, status and body.
     `options.response` must be set to `true` for IE8 support.
 
 ### `options.useXDR`
