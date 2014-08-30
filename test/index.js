@@ -82,5 +82,14 @@ test("XDR usage (run on IE8 or 9)", function(assert) {
         "Uses XDR with deprecated option cors"
     )
     
+    if(!!window.XDomainRequest){
+        assert.throws(function(){
+            xhr({
+                useXDR: true,
+                uri: window.location.href,
+                headers:{"foo":"bar"}
+            }, function () {})
+        },true,"Throws when trying to send headers with XDR")
+    }
     assert.end()
 })
