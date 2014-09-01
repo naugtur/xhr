@@ -4,7 +4,9 @@ var test = require("tape")
 var xhr = require("../index.js")
 
 test("constructs and calls callback without throwing", function(assert) {
-    xhr({}, function (err, resp, body) {
+    xhr({
+        response: !!window.XDomainRequest //currently, IE8 will fail if this is not set to true, as documented
+    }, function (err, resp, body) {
         assert.ok(true, "got here")
         assert.end()
     })
@@ -14,6 +16,7 @@ test("can GET current page", function(assert) {
     xhr({
         headers: {accept: "text/html"},
         uri: window.location.href,
+        response: !!window.XDomainRequest
     }, function (err, resp, body) {
         assert.ifError(err, "no err")
         assert.end()
@@ -29,7 +32,7 @@ test("can GET current page with response option = true", function(assert) {
         assert.ifError(err, "no err")
         assert.equal(resp.statusCode, 200)
         assert.equal(resp.statusText, 'OK')
-        assert.equal(resp.headers['content-type'], 'text/html')
+        assert.equal(resp.headers['content-type'].indexOf('text/html'), 0) //can be 'text/html; charset=UTF-8' in IE8 particularly
         assert.notEqual(resp.body.length, 0)
         assert.notEqual(body.length, 0)
         assert.end()
@@ -37,26 +40,33 @@ test("can GET current page with response option = true", function(assert) {
 })
 
 test("withCredentials option", function(assert) {
-    var req = xhr({}, function () {})
-    assert.ok(
-        !req.withCredentials,
-        "withCredentials not true when nothing set in options"
-    )
-    req = xhr({
-        cors: true
-    }, function () {})
-    assert.ok(
-        req.withCredentials,
-        "withCredentials set to true when cors is true in options"
-    )
-    req = xhr({
-        cors: true,
-        withCredentials: false
-    }, function () {})
-    assert.ok(
-        !req.withCredentials,
-        "withCredentials set to false when set to false in options"
-    )
+    if(!window.XDomainRequest){
+        var req = xhr({}, function () {})
+        assert.ok(
+            !req.withCredentials,
+            "withCredentials not true when nothing set in options"
+        )
+        req = xhr({
+            cors: true
+        }, function () {})
+        assert.ok(
+            req.withCredentials,
+            "withCredentials set to true when cors is true in options"
+        )
+        req = xhr({
+            cors: true,
+            withCredentials: false
+        }, function () {})
+        assert.ok(
+            !req.withCredentials,
+            "withCredentials set to false when set to false in options"
+        )
+    } else {
+        assert.ok(
+            true,
+            "no point testing withCredentials in IE8/9"
+        )
+    }
     assert.end()
 })
 
