@@ -4,9 +4,7 @@ var test = require("tape")
 var xhr = require("../index.js")
 
 test("constructs and calls callback without throwing", function(assert) {
-    xhr({
-        response: !!window.XDomainRequest //currently, IE8 will fail if this is not set to true, as documented
-    }, function (err, resp, body) {
+    xhr({}, function (err, resp, body) {
         assert.ok(true, "got here")
         assert.end()
     })
@@ -15,26 +13,39 @@ test("constructs and calls callback without throwing", function(assert) {
 test("can GET current page", function(assert) {
     xhr({
         headers: {accept: "text/html"},
-        uri: window.location.href,
-        response: !!window.XDomainRequest
+        uri: window.location.href
     }, function (err, resp, body) {
         assert.ifError(err, "no err")
+        assert.equal(resp.statusCode, 200)
+        assert.equal(typeof resp.res, "object")
+        assert.equal(resp.headers['content-type'].indexOf('text/html'), 0) //can be 'text/html; charset=UTF-8' in IE8 particularly
+        assert.notEqual(resp.body.length, 0)
+        assert.notEqual(body.length, 0)
         assert.end()
     })
 })
 
-test("can GET current page with response option = true", function(assert) {
+test("Returns http error responses like npm's request", function(assert) {
     xhr({
         headers: {accept: "text/html"},
-        uri: window.location.href,
-        response: true
+        uri: window.location.href+"theonethatdoesntexist"
     }, function (err, resp, body) {
         assert.ifError(err, "no err")
-        assert.equal(resp.statusCode, 200)
-        assert.equal(resp.statusText, 'OK')
-        assert.equal(resp.headers['content-type'].indexOf('text/html'), 0) //can be 'text/html; charset=UTF-8' in IE8 particularly
-        assert.notEqual(resp.body.length, 0)
-        assert.notEqual(body.length, 0)
+        assert.equal(resp.statusCode, 404)
+        assert.equal(typeof resp.res, "object")
+        assert.end()
+    })
+})
+
+test("Returns http errors as errors when an option is set", function(assert) {
+    xhr({
+        headers: {accept: "text/html"},
+        httpErrors:true,
+        uri: window.location.href+"theonethatdoesntexist"
+    }, function (err, resp, body) {
+        assert.equal(err.message, "Error 404")
+        assert.equal(resp.statusCode, 404)
+        assert.equal(typeof resp.res, "object")
         assert.end()
     })
 })
@@ -44,22 +55,14 @@ test("withCredentials option", function(assert) {
         var req = xhr({}, function () {})
         assert.ok(
             !req.withCredentials,
-            "withCredentials not true when nothing set in options"
+            "withCredentials not true"
         )
         req = xhr({
-            cors: true
+            withCredentials: true
         }, function () {})
         assert.ok(
             req.withCredentials,
-            "withCredentials set to true when cors is true in options"
-        )
-        req = xhr({
-            cors: true,
-            withCredentials: false
-        }, function () {})
-        assert.ok(
-            !req.withCredentials,
-            "withCredentials set to false when set to false in options"
+            "withCredentials set to true"
         )
     } else {
         assert.ok(
@@ -73,7 +76,6 @@ test("withCredentials option", function(assert) {
 test("XDR usage (run on IE8 or 9)", function(assert) {
     var req = xhr({
         useXDR: true,
-        response:true,
         uri: window.location.href,
     }, function () {})
     
@@ -82,15 +84,6 @@ test("XDR usage (run on IE8 or 9)", function(assert) {
         "Uses XDR when told to"
     )
     
-    req = xhr({
-        cors: true,
-        uri: window.location.href,
-    }, function () {})
-    
-    assert.ok(
-        !window.XDomainRequest || window.XDomainRequest === req.constructor,
-        "Uses XDR with deprecated option cors"
-    )
     
     if(!!window.XDomainRequest){
         assert.throws(function(){
