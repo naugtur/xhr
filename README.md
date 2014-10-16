@@ -44,7 +44,7 @@ the returned object is either an [`XMLHttpRequest`][3] instance
 
 Your callback will be called once with the arguments
     ( [`Error`][5], `response` , `body` ) where the response is an object:
-```
+```js
 {
     body: Object||String,
     statusCode: Number,
@@ -55,7 +55,7 @@ Your callback will be called once with the arguments
 ```
  - `body`: HTTP response body - [`xhr.response`][6], [`xhr.responseText`][7] or
     [`xhr.responseXML`][8] depending on the request type.
- - 'res': Original  [`XMLHttpRequest`][3] instance
+ - `res`: Original  [`XMLHttpRequest`][3] instance
     or [`XDomainRequest`][4] instance (if on IE8/IE9 &&
     `options.useXDR` is set to `true`)
     
