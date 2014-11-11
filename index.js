@@ -1,3 +1,4 @@
+"use strict";
 var window = require("global/window")
 var once = require("once")
 var parseHeaders = require("parse-headers")
@@ -9,6 +10,73 @@ var XDR = "withCredentials" in (new XHR()) ? XHR : window.XDomainRequest
 module.exports = createXHR
 
 function createXHR(options, callback) {
+    function readystatechange() {
+        if (xhr.readyState === 4) {
+            loadFunc()
+        }
+    }
+
+    function getBody() {
+        // Chrome with requestType=blob throws errors arround when even testing access to responseText
+        var body = undefined
+
+        if (xhr.response) {
+            body = xhr.response
+        } else if (xhr.responseType === "text" || !xhr.responseType) {
+            body = xhr.responseText || xhr.responseXML
+        }
+
+        if (isJson) {
+            try {
+                body = JSON.parse(body)
+            } catch (e) {}
+        }
+
+        return body
+    }
+    
+    var failureResponse = {
+                body: undefined,
+                headers: {},
+                statusCode: 0,
+                method: method,
+                url: uri,
+                rawRequest: xhr
+            }
+    
+    function errorFunc(evt) {
+        if(! evt instanceof Error){
+            evt = new Error(""+evt)
+        }
+        evt.statusCode = 0
+        callback(evt, failureResponse)
+    }
+
+    // will load the data & process the response in a special response object
+    function loadFunc() {
+        var status = (xhr.status === 1223 ? 204 : xhr.status)
+        var response = failureResponse
+        var err = null
+        
+        if (status !== 0){
+            response = {
+                body: getBody(),
+                statusCode: status,
+                method: method,
+                headers: {},
+                url: uri,
+                rawRequest: xhr
+            }
+            if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
+                response.headers = parseHeaders(xhr.getAllResponseHeaders())
+            }
+        } else {
+            err = new Error("Internal XMLHttpRequest Error")
+        }
+        callback(err, response, response.body)
+        
+    }
+    
     if (typeof options === "string") {
         options = { uri: options }
     }
@@ -50,15 +118,14 @@ function createXHR(options, callback) {
     xhr.onprogress = function () {
         // IE must die
     }
-    // hate IE
-    xhr.ontimeout = noop
+    xhr.ontimeout = errorFunc
     xhr.open(method, uri, !sync)
     //has to be after open
     xhr.withCredentials = !!options.withCredentials
     
     // Cannot set timeout with sync request
     if (!sync) {
-        xhr.timeout = "timeout" in options ? options.timeout : 5000
+        xhr.timeout = "timeout" in options ? options.timeout : 0
     }
 
     if (xhr.setRequestHeader) {
@@ -85,80 +152,7 @@ function createXHR(options, callback) {
 
     return xhr
 
-    function readystatechange() {
-        if (xhr.readyState === 4) {
-            loadFunc()
-        }
-    }
 
-    function getBody() {
-        // Chrome with requestType=blob throws errors arround when even testing access to responseText
-        var body = null
-
-        if (xhr.response) {
-            body = xhr.response
-        } else if (xhr.responseType === "text" || !xhr.responseType) {
-            body = xhr.responseText || xhr.responseXML
-        }
-
-        if (isJson) {
-            try {
-                body = JSON.parse(body)
-            } catch (e) {}
-        }
-
-        return body
-    }
-    
-    var failureResponse = {
-                body: null,
-                statusCode: 0,
-                method: method,
-                url: uri,
-                res: xhr
-            }
-    
-    function errorFunc(evt) {
-        evt.statusCode = 0;
-        callback(evt, failureResponse)
-    }
-
-    // will load the data & process the response in a special response object
-    function loadFunc() {
-        var status = (xhr.status === 1223 ? 204 : xhr.status)
-        var response = failureResponse;
-        var err = (status === 0 || options.httpErrors)? errorFromStatusCode(status) : null
-        
-        if (status !== 0){
-            response = {
-                body: getBody(),
-                statusCode: status,
-                method: method,
-                url: uri,
-                res: xhr
-            }
-            if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
-                response.headers = parseHeaders(xhr.getAllResponseHeaders())
-            } else {
-                response.headers = {}
-            }
-        }
-        
-        callback(err, response, response.body)
-    }
-
-    function errorFromStatusCode(status, body) {
-        var error = null
-        if (status === 0 || (status >= 400 && status < 600)) {
-            var message = (typeof body === "string" ? body : false) ||
-                (status? "Error "+status : "Internal XMLHttpRequest Error")
-            error = new Error(message)
-            error.statusCode = status //old behavior for http errors
-        }
-
-        return error
-    }
-   
 }
 
 

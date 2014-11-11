@@ -2,7 +2,7 @@
 
 A small xhr wrapper. Designed for use with [browserify](http://browserify.org/).
 
-[![browser support](https://ci.testling.com/raynos/xhr.png)](https://ci.testling.com/Raynos/xhr)
+Browser support: IE8+ and everything else.
 
 ## Example
 
@@ -49,19 +49,21 @@ Your callback will be called once with the arguments
     body: Object||String,
     statusCode: Number,
     method: String,
+    headers: {},
     url: String,
-    res: xhr
+    rawRequest: xhr
 }   
 ```
  - `body`: HTTP response body - [`xhr.response`][6], [`xhr.responseText`][7] or
     [`xhr.responseXML`][8] depending on the request type.
- - `res`: Original  [`XMLHttpRequest`][3] instance
+ - `rawRequest`: Original  [`XMLHttpRequest`][3] instance
     or [`XDomainRequest`][4] instance (if on IE8/IE9 &&
     `options.useXDR` is set to `true`)
+ - `headers`: A collection of headers where keys are header names converted to lowercase
     
 
 Your callback will be called with an [`Error`][5] if there is an error in the browser that prevents sending the request. 
-A HTTP 500 response is not going to cause an error to be returned. To bring back the old behavior see `options.httpErrors`.
+A HTTP 500 response is not going to cause an error to be returned. 
     
 If `options` is a string then it's a short hand for
     `{ method: "GET", uri: string }`
@@ -103,8 +105,7 @@ An object of headers that should be set on the request. The
 
 ### `options.timeout`
 
-A numeric timeout to use for this xhr request. Defaults to 5
-    seconds. Ignored when `options.sync` is true.
+A numeric timeout to use for this xhr request. Defaults to 0 (no timeout). Ignored when `options.sync` is true.
 
 ### `options.json`
 
