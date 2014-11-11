@@ -3,7 +3,7 @@ var once = require("once")
 var parseHeaders = require('parse-headers')
 
 var messages = {
-    "0": "Internal XMLHttpRequest Error",
+    "0": "Internal XMLHttpRequest Error - set XHR timeout has been reached.",
     "4": "4xx Client Error",
     "5": "5xx Server Error"
 }
