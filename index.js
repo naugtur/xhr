@@ -66,7 +66,7 @@ function createXHR(options, callback) {
 
     // Cannot set timeout with sync request
     if (!sync) {
-        xhr.timeout = "timeout" in options ? options.timeout : 5000
+        xhr.timeout = "timeout" in options ? options.timeout : 0
     }
 
     if (xhr.setRequestHeader) {
