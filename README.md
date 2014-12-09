@@ -105,7 +105,7 @@ An object of headers that should be set on the request. The
 
 ### `options.timeout`
 
-A numeric timeout to use for this xhr request. Defaults to 0 (no timeout). Ignored when `options.sync` is true.
+Number of miliseconds to wait for response. Defaults to 0 (no timeout). Ignored when `options.sync` is true.
 
 ### `options.json`
 

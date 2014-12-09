@@ -45,6 +45,7 @@ function createXHR(options, callback) {
             }
     
     function errorFunc(evt) {
+        clearTimeout(timeoutTimer)
         if(! evt instanceof Error){
             evt = new Error(""+evt)
         }
@@ -54,6 +55,8 @@ function createXHR(options, callback) {
 
     // will load the data & process the response in a special response object
     function loadFunc() {
+        clearTimeout(timeoutTimer)
+        
         var status = (xhr.status === 1223 ? 204 : xhr.status)
         var response = failureResponse
         var err = null
@@ -101,6 +104,7 @@ function createXHR(options, callback) {
     var headers = xhr.headers = options.headers || {}
     var sync = !!options.sync
     var isJson = false
+    var timeoutTimer
 
     if ("json" in options) {
         isJson = true
@@ -124,8 +128,12 @@ function createXHR(options, callback) {
     xhr.withCredentials = !!options.withCredentials
     
     // Cannot set timeout with sync request
-    if (!sync) {
-        xhr.timeout = "timeout" in options ? options.timeout : 0
+    // not setting timeout on the xhr object, because of old webkits etc. not handling that correctly
+    // both npm's request and jquery 1.x use this kind of timeout, so this is being consistent
+    if (!sync && options.timeout > 0 ) {
+        timeoutTimer = setTimeout(function(){
+            xhr.abort("timeout");
+        }, options.timeout+2 );
     }
 
     if (xhr.setRequestHeader) {

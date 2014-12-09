@@ -41,7 +41,7 @@ test("Returns http error responses like npm's request", function (assert) {
     })
 })
 
-test("Times out to an error //browser support :o ", function (assert) {
+test("Times out to an error ", function (assert) {
     xhr({
         headers: {
             accept: "text/html"
