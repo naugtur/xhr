@@ -16,8 +16,7 @@ xhr({
         "Content-Type": "application/json"
     }
 }, function (err, resp, body) {
-    // resp === xhr
-    // check resp.body or resp.statusCode
+    // check resp.statusCode
 })
 ```
 
