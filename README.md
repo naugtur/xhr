@@ -2,7 +2,7 @@
 
 A small xhr wrapper. Designed for use with [browserify](http://browserify.org/).
 
-[![browser support](https://ci.testling.com/raynos/xhr.png)](https://ci.testling.com/Raynos/xhr)
+Browser support: IE8+ and everything else.
 
 ## Example
 
@@ -16,8 +16,7 @@ xhr({
         "Content-Type": "application/json"
     }
 }, function (err, resp, body) {
-    // resp === xhr
-    // check resp.body or resp.statusCode
+    // check resp.statusCode
 })
 ```
 
@@ -34,8 +33,7 @@ type XhrOptions = String | {
     headers: Object?,
     body: String?,
     json: Object?,
-    withCredentials: Boolean?,
-    response: Boolean?
+    withCredentials: Boolean?
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
@@ -44,14 +42,28 @@ the returned object is either an [`XMLHttpRequest`][3] instance
     `options.useXDR` is set to `true`)
 
 Your callback will be called once with the arguments
-    ( [`Error`][5], `response` , `body` ) where the response is depending on
-    `options.response` and body will be either
-    [`xhr.response`][6], [`xhr.responseText`][7] or
+    ( [`Error`][5], `response` , `body` ) where the response is an object:
+```js
+{
+    body: Object||String,
+    statusCode: Number,
+    method: String,
+    headers: {},
+    url: String,
+    rawRequest: xhr
+}   
+```
+ - `body`: HTTP response body - [`xhr.response`][6], [`xhr.responseText`][7] or
     [`xhr.responseXML`][8] depending on the request type.
+ - `rawRequest`: Original  [`XMLHttpRequest`][3] instance
+    or [`XDomainRequest`][4] instance (if on IE8/IE9 &&
+    `options.useXDR` is set to `true`)
+ - `headers`: A collection of headers where keys are header names converted to lowercase
+    
 
-Your callback will be called with an [`Error`][5] if the
-    resulting status of the request is either `0`, `4xx` or `5xx`
-
+Your callback will be called with an [`Error`][5] if there is an error in the browser that prevents sending the request. 
+A HTTP 500 response is not going to cause an error to be returned. 
+    
 If `options` is a string then it's a short hand for
     `{ method: "GET", uri: string }`
 
@@ -59,12 +71,6 @@ If `options` is a string then it's a short hand for
 
 Specify the method the [`XMLHttpRequest`][3] should be opened
     with. Passed to [`xhr.open`][2]. Defaults to "GET"
-
-### `options.response`
-Specify the format of the response. Defaults to return the xhr/xdr-object
-    with body, headers and status-properties added. When set to `true` a special response
-    object is returned that includes parsed response headers, status and body.
-    `options.response` must be set to `true` for IE8 support.
 
 ### `options.useXDR`
 
@@ -98,8 +104,7 @@ An object of headers that should be set on the request. The
 
 ### `options.timeout`
 
-A numeric timeout to use for this xhr request. Defaults to 5
-    seconds. Ignored when `options.sync` is true.
+Number of miliseconds to wait for response. Defaults to 0 (no timeout). Ignored when `options.sync` is true.
 
 ### `options.json`
 
@@ -114,9 +119,6 @@ Additionally the response body is parsed as JSON
 Specify whether user credentials are to be included in a cross-origin
     request. Sets [`xhr.withCredentials`][10]. Defaults to false.
     
-For backward-compatibility defaults to true
-    when deprecated `options.cors` is also true.
-
 A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `withCredentials` is true. 
     The header needs to specify your origin explicitly or browser will abort the request.
     
