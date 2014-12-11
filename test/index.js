@@ -102,3 +102,9 @@ test("XDR usage (run on IE8 or 9)", function (assert) {
     }
     assert.end()
 })
+
+test("fire and forget request", function (assert) {
+    var req = xhr({ uri: "http://reqr.es/api/stuff" })
+    assert.ok(req,"without callback")
+    assert.end()
+})
