@@ -85,7 +85,8 @@ function createXHR(options, callback) {
     }
 
     options = options || {}
-    callback = callback || noop
+    if(options.fireAndForget)
+      callback = callback || noop
     callback = once(callback)
 
     var xhr = options.xhr || null
