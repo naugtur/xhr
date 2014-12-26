@@ -23,6 +23,18 @@ test("can GET current page", function(assert) {
     })
 })
 
+test("returns the correct body", function(assert) {
+    xhr({
+        uri:window.location.href+'/gimme404',
+        body: "hello",
+        method: "POST"
+    }, function (err, resp, body) {
+        assert.equal(err.statusCode, 404)
+        assert.notEqual(err.message, "hello")
+        assert.end()
+    })
+})
+
 test("can GET current page with response option = true", function(assert) {
     xhr({
         headers: {accept: "text/html"},

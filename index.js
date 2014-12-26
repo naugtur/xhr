@@ -123,7 +123,7 @@ function createXHR(options, callback) {
     }
 
     // if we're getting a none-ok statusCode, build & return an error
-    function errorFromStatusCode(status) {
+    function errorFromStatusCode(status, body) {
         var error = null
         if (status === 0 || (status >= 400 && status < 600)) {
             var message = (typeof body === "string" ? body : false) ||
@@ -138,9 +138,10 @@ function createXHR(options, callback) {
     // will load the data & process the response in a special response object
     function loadResponse() {
         var status = getStatusCode()
-        var error = errorFromStatusCode(status)
+        var body = getBody()
+        var error = errorFromStatusCode(status, body)
         var response = {
-            body: getBody(),
+            body: body,
             statusCode: status,
             statusText: xhr.statusText,
             raw: xhr
