@@ -46,8 +46,8 @@ function createXHR(options, callback) {
     
     function errorFunc(evt) {
         clearTimeout(timeoutTimer)
-        if(! evt instanceof Error){
-            evt = new Error(""+evt)
+        if(!(evt instanceof Error)){
+            evt = new Error("" + (evt || "unknown") )
         }
         evt.statusCode = 0
         callback(evt, failureResponse)

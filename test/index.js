@@ -102,3 +102,22 @@ test("XDR usage (run on IE8 or 9)", function (assert) {
     }
     assert.end()
 })
+
+test("handles errorFunc call with no arguments provided", function (assert) {
+    var req = xhr({}, function (err) {
+        assert.ok(err instanceof Error, "callback should get an error")
+        assert.equal(err.message, "unknown", "error message should say 'unknown'")
+    })
+    assert.doesNotThrow(function () {
+        req.onerror()
+    }, "should not throw when error handler called without arguments")
+    assert.end()
+
+})
+
+test("constructs and calls callback without throwing", function (assert) {
+    assert.throws(function () {
+        xhr({})
+    }, "callback is not optional")
+    assert.end()
+})
