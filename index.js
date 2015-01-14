@@ -85,7 +85,9 @@ function createXHR(options, callback) {
     }
 
     options = options || {}
-    callback = callback || noop
+    if(typeof callback === "undefined"){
+        throw new Error("callback argument missing")
+    }
     callback = once(callback)
 
     var xhr = options.xhr || null
