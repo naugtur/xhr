@@ -33,7 +33,8 @@ type XhrOptions = String | {
     headers: Object?,
     body: String?,
     json: Object?,
-    withCredentials: Boolean?
+    withCredentials: Boolean?,
+    responseType: String?
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
@@ -121,7 +122,10 @@ Specify whether user credentials are to be included in a cross-origin
     
 A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `withCredentials` is true. 
     The header needs to specify your origin explicitly or browser will abort the request.
-    
+
+### `options.responseType`
+
+Determines the data type of the `response`. Sets [`xhr.responseType`][11]. For example, a `responseType` of `document` will return a parsed `Document` object as the `response.body` for an XML resource.
 
 ## MIT Licenced
 
@@ -135,3 +139,4 @@ A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `
   [8]: http://xhr.spec.whatwg.org/#the-responsexml-attribute
   [9]: http://xhr.spec.whatwg.org/#the-setrequestheader()-method
   [10]: http://xhr.spec.whatwg.org/#the-withcredentials-attribute
+  [11]: https://xhr.spec.whatwg.org/#the-responsetype-attribute
