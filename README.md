@@ -122,6 +122,9 @@ Specify whether user credentials are to be included in a cross-origin
 A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `withCredentials` is true. 
     The header needs to specify your origin explicitly or browser will abort the request.
     
+### `options.send`
+
+Specify whether the request should be sent immediately. Defaults to true.
 
 ## MIT Licenced
 
