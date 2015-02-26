@@ -78,6 +78,25 @@ test("withCredentials option", function (assert) {
     assert.end()
 })
 
+test("withCredentials ignored when using synchronous requests", function (assert) {
+    if (!window.XDomainRequest) {
+        var req = xhr({
+            withCredentials: true,
+            sync: true
+        }, function () {})
+        assert.ok(
+            !req.withCredentials,
+            "sync overrides withCredentials"
+        )
+    } else {
+        assert.ok(
+            true,
+            "no point testing withCredentials in IE8/9"
+        )
+    }
+    assert.end()
+})
+
 test("XDR usage (run on IE8 or 9)", function (assert) {
     var req = xhr({
         useXDR: true,
