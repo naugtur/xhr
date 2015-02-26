@@ -128,8 +128,9 @@ function createXHR(options, callback) {
     xhr.ontimeout = errorFunc
     xhr.open(method, uri, !sync)
     //has to be after open
-    xhr.withCredentials = !!options.withCredentials
-    
+    if(!sync)
+        xhr.withCredentials = !!options.withCredentials
+
     // Cannot set timeout with sync request
     // not setting timeout on the xhr object, because of old webkits etc. not handling that correctly
     // both npm's request and jquery 1.x use this kind of timeout, so this is being consistent
