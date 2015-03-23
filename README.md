@@ -127,6 +127,10 @@ A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `
 
 Determines the data type of the `response`. Sets [`xhr.responseType`][11]. For example, a `responseType` of `document` will return a parsed `Document` object as the `response.body` for an XML resource.
 
+### `options.xhr`
+
+Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` or `XDomainRequest` constructors. Useful for testing.
+
 ## MIT Licenced
 
   [1]: http://xhr.spec.whatwg.org/#the-send()-method
