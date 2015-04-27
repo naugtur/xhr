@@ -26,9 +26,9 @@ function createXHR(options, callback) {
             body = xhr.responseText || xhr.responseXML
         }
 
-        if (isJson) {
+        if (isJson || xhr.responseType === 'json') {
             try {
-                body = JSON.parse(body)
+                body = JSON.parse(body || xhr.responseText)
             } catch (e) {}
         }
 
