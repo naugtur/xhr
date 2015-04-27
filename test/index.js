@@ -11,48 +11,96 @@ test("constructs and calls callback without throwing", function (assert) {
 })
 
 test("can GET a url", function (assert) {
+  if (!window.XDomainRequest) {
     xhr({
-        headers: {
-            accept: "text/html"
-        },
-        uri: "http://reqr.es/api/stuff"
+      headers: {
+        accept: "text/html"
+      },
+      uri: "http://reqr.es/api/stuff"
     }, function (err, resp, body) {
-        assert.ifError(err, "no err")
-        assert.equal(resp.statusCode, 200)
-        assert.equal(typeof resp.rawRequest, "object")
-        assert.equal(resp.headers['content-type'].indexOf('application/json'), 0)
-        assert.notEqual(resp.body.length, 0)
-        assert.notEqual(body.length, 0)
-        assert.end()
+      assert.ifError(err, "no err")
+      assert.equal(resp.statusCode, 200)
+      assert.equal(typeof resp.rawRequest, "object")
+      assert.equal(resp.headers['content-type'].indexOf('application/json'), 0)
+      assert.notEqual(resp.body.length, 0)
+      assert.notEqual(body.length, 0)
+      assert.end()
     })
+  } else {
+    assert.ok(
+      true,
+      "no point testing with headers in IE8/9"
+    )
+    assert.end()
+  }
+})
+
+test("can GET json in IE8/9", function (assert) {
+  if (window.XDomainRequest) {
+    xhr({
+      useXDR: true,
+      uri: "http://reqr.es/api/stuff",
+      responseType: "json"
+    }, function (err, resp, body) {
+      assert.ifError(err, "no err")
+      assert.equal(typeof resp.statusCode, "undefined")
+      assert.equal(typeof resp.rawRequest, "object")
+      assert.equal(typeof resp.headers, "object")
+      assert.equal(Object.keys(resp.body).length, 5)
+      assert.equal(Object.keys(body).length, 5)
+      assert.end()
+    })
+  } else {
+    assert.ok(
+      true,
+      "no point testing not in IE8/9"
+    )
+    assert.end()
+  }
 })
 
 test("Returns http error responses like npm's request", function (assert) {
+  if (!window.XDomainRequest) {
     xhr({
-        headers: {
-            accept: "text/html"
-        },
-        uri: "http://reqr.es/api/stuff/23"
+      headers: {
+        accept: "text/html"
+      },
+      uri: "http://reqr.es/api/stuff/23"
     }, function (err, resp, body) {
-        assert.ifError(err, "no err")
-        assert.equal(resp.statusCode, 404)
-        assert.equal(typeof resp.rawRequest, "object")
-        assert.end()
+      assert.ifError(err, "no err")
+      assert.equal(resp.statusCode, 404)
+      assert.equal(typeof resp.rawRequest, "object")
+      assert.end()
     })
+  } else {
+    assert.ok(
+      true,
+      "no point testing with headers in IE8/9"
+    )
+    assert.end()
+  }
 })
 
 test("Times out to an error ", function (assert) {
+  if (!window.XDomainRequest) {
     xhr({
-        headers: {
-            accept: "text/html"
-        },
-        timeout: 1000,
-        uri: "http://reqr.es/api/stuff?delay=10"
+      headers: {
+        accept: "text/html"
+      },
+      timeout: 1000,
+      uri: "http://reqr.es/api/stuff?delay=10"
     }, function (err, resp, body) {
-        assert.ok(err instanceof Error, "should return error")
-        assert.equal(resp.statusCode, 0)
-        assert.end()
+      assert.ok(err instanceof Error, "should return error")
+      assert.equal(resp.statusCode, 0)
+      assert.end()
     })
+  } else {
+    assert.ok(
+      true,
+      "no point testing with headers in IE8/9"
+    )
+    assert.end()
+  }
 })
 
 
