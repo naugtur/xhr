@@ -96,7 +96,7 @@ Pass in body to be send across the [`XMLHttpRequest`][3].
 
 ### `options.uri` or `options.url`
 
-The uri to send a request too. Passed to [`xhr.open`][2]. `options.url` and `options.uri` are aliases for each other.
+The uri to send a request to. Passed to [`xhr.open`][2]. `options.url` and `options.uri` are aliases for each other.
 
 ### `options.headers`
 
