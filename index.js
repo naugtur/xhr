@@ -122,7 +122,7 @@ function createXHR(options, callback) {
     xhr.onload = loadFunc
     xhr.onerror = errorFunc
     // IE9 must have onprogress be set to a unique function.
-    xhr.onprogress = function () {
+    xhr.onprogress = options.onprogress || function () {
         // IE must die
     }
     xhr.ontimeout = errorFunc
