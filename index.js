@@ -21,10 +21,6 @@ else if (typeof define !== 'undefined' && define.amd) {
 else if (typeof module !== 'undefined' && module.exports) {
     module.exports = createXHR;
 }
-// included directly via <script> tag
-else {
-    root.async = createXHR;
-}
 
 function createXHR(options, callback) {
     function readystatechange() {
