@@ -11,12 +11,6 @@ var XDR = "withCredentials" in (new XHR()) ? XHR : window.XDomainRequest
 if (typeof Package !== 'undefined') {
   xhr = createXHR;
 }
-// AMD / RequireJS
-else if (typeof define !== 'undefined' && define.amd) {
-    define([], function () {
-        return createXHR;
-    });
-}
 // Node.js
 else if (typeof module !== 'undefined' && module.exports) {
     module.exports = createXHR;
