@@ -7,7 +7,24 @@ var parseHeaders = require("parse-headers")
 var XHR = window.XMLHttpRequest || noop
 var XDR = "withCredentials" in (new XHR()) ? XHR : window.XDomainRequest
 
-module.exports = createXHR
+//Meteor
+if (typeof Package !== 'undefined') {
+  xhr = createXHR;
+}
+// AMD / RequireJS
+else if (typeof define !== 'undefined' && define.amd) {
+    define([], function () {
+        return createXHR;
+    });
+}
+// Node.js
+else if (typeof module !== 'undefined' && module.exports) {
+    module.exports = createXHR;
+}
+// included directly via <script> tag
+else {
+    root.async = createXHR;
+}
 
 function createXHR(options, callback) {
     function readystatechange() {
@@ -126,7 +143,7 @@ function createXHR(options, callback) {
         // IE must die
     }
     xhr.ontimeout = errorFunc
-    xhr.open(method, uri, !sync)
+    xhr.open(method, uri, !sync, options.username, options.password)
     //has to be after open
     if(!sync) {
         xhr.withCredentials = !!options.withCredentials
