@@ -7,14 +7,7 @@ var parseHeaders = require("parse-headers")
 var XHR = window.XMLHttpRequest || noop
 var XDR = "withCredentials" in (new XHR()) ? XHR : window.XDomainRequest
 
-//Meteor
-if (typeof Package !== 'undefined') {
-  xhr = createXHR;
-}
-// Node.js
-else if (typeof module !== 'undefined' && module.exports) {
-    module.exports = createXHR;
-}
+module.exports = createXHR
 
 function createXHR(options, callback) {
     function readystatechange() {
