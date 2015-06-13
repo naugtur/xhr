@@ -33,6 +33,8 @@ type XhrOptions = String | {
     headers: Object?,
     body: String?,
     json: Object?,
+    username: String?,
+    password: String?,
     withCredentials: Boolean?,
     responseType: String?
 }

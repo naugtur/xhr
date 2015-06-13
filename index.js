@@ -126,7 +126,7 @@ function createXHR(options, callback) {
         // IE must die
     }
     xhr.ontimeout = errorFunc
-    xhr.open(method, uri, !sync)
+    xhr.open(method, uri, !sync, options.username, options.password)
     //has to be after open
     if(!sync) {
         xhr.withCredentials = !!options.withCredentials
