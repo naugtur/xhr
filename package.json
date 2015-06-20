@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "global": "~4.3.0",
-    "once": "~1.1.1",
+    "once": "^1.1.1",
     "parse-headers": "^2.0.0"
   },
   "devDependencies": {
