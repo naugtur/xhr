@@ -125,6 +125,11 @@ function createXHR(options, callback) {
     xhr.onprogress = options.onprogress || function () {
         // IE must die
     }
+    if(xhr.upload && options.upload)
+        xhr.upload.onprogress = options.upload.onprogress || function () {
+            // IE must die
+        }
+
     xhr.ontimeout = errorFunc
     xhr.open(method, uri, !sync)
     //has to be after open
