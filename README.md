@@ -133,6 +133,30 @@ Determines the data type of the `response`. Sets [`xhr.responseType`][11]. For e
 
 Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` or `XDomainRequest` constructors. Useful for testing.
 
+### `options.onprogress`
+
+Specify your own onprogress - callback function
+
+### `options.upload.onprogress`
+
+Specify your own upload.onprogress - callback function
+```js
+var xhr = require("xhr")
+
+xhr({
+    body: someJSONString,
+    uri: "/foo",
+    method: "POST",
+    upload: {
+        onprogress: function(e) {
+            console.log(e);
+        }
+    }
+}, function (err, resp, body) {
+    // check resp.statusCode
+})
+```
+
 ## MIT Licenced
 
   [1]: http://xhr.spec.whatwg.org/#the-send()-method

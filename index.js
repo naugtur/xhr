@@ -122,9 +122,14 @@ function createXHR(options, callback) {
     xhr.onload = loadFunc
     xhr.onerror = errorFunc
     // IE9 must have onprogress be set to a unique function.
-    xhr.onprogress = function () {
+    xhr.onprogress = options.onprogress || function () {
         // IE must die
     }
+    if(xhr.upload && options.upload)
+        xhr.upload.onprogress = options.upload.onprogress || function () {
+            // IE must die
+        }
+
     xhr.ontimeout = errorFunc
     xhr.open(method, uri, !sync, options.username, options.password)
     //has to be after open

@@ -140,3 +140,30 @@ test("constructs and calls callback without throwing", function (assert) {
     }, "callback is not optional")
     assert.end()
 })
+
+test("handles onprogressFunc ", function (assert) {
+    xhr({
+        onprogress: function(e) {
+            assert.ok(e && e.type === 'progress', "callback should get a ProgressEvent");
+        },
+        uri: window.location.href,
+    }, function (err, resp, body) {
+        assert.ok(true, "got here")
+        assert.end()
+    })
+})
+
+test("handles onUploadProgressFunc ", function (assert) {
+    xhr({
+        method: 'POST',
+        upload: {
+            onprogress: function(e) {
+                assert.ok(e && e.type === 'progress', "callback should get a ProgressEvent");
+            }
+        },
+        uri: window.location.href,
+    }, function (err, resp, body) {
+        assert.ok(true, "got here")
+        assert.end()
+    })
+})
