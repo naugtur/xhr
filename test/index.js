@@ -140,3 +140,25 @@ test("constructs and calls callback without throwing", function (assert) {
     }, "callback is not optional")
     assert.end()
 })
+
+test("XHR can be overridden", function (assert) {
+  var xhrs = 0
+  var noop = function () {}
+  var fakeXHR = function () {
+    xhrs++
+    this.open = this.send = noop
+  }
+  var xdrs = 0
+  var fakeXDR = function () {
+    xdrs++
+    this.open = this.send = noop
+  }
+  xhr.XMLHttpRequest = fakeXHR
+  xhr({}, function () {})
+  assert.equal(xhrs, 1, "created the custom XHR")
+
+  xhr.XDomainRequest = fakeXDR
+  xhr({ useXDR: true }, function () {});
+  assert.equal(xdrs, 1, "created the custom XDR")
+  assert.end()
+})
