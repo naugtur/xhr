@@ -4,10 +4,10 @@ var once = require("once")
 var parseHeaders = require("parse-headers")
 
 
-var XHR = window.XMLHttpRequest || noop
-var XDR = "withCredentials" in (new XHR()) ? XHR : window.XDomainRequest
 
 module.exports = createXHR
+createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
+createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
 
 function createXHR(options, callback) {
     function readystatechange() {
@@ -94,9 +94,9 @@ function createXHR(options, callback) {
 
     if (!xhr) {
         if (options.cors || options.useXDR) {
-            xhr = new XDR()
+            xhr = new createXHR.XDomainRequest()
         }else{
-            xhr = new XHR()
+            xhr = new createXHR.XMLHttpRequest()
         }
     }
 
@@ -166,6 +166,5 @@ function createXHR(options, callback) {
 
 
 }
-
 
 function noop() {}

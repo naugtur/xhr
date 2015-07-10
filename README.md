@@ -133,6 +133,20 @@ Determines the data type of the `response`. Sets [`xhr.responseType`][11]. For e
 
 Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` or `XDomainRequest` constructors. Useful for testing.
 
+## Mocking Requests
+You can override the constructor used to create new requests for testing. When you're making a new request:
+
+```js
+xhr({ xhr: new MockXMLHttpRequest() })
+```
+
+or you can override the constructors used to create requests at the module level:
+
+```js
+xhr.XMLHttpRequest = MockXMLHttpRequest
+xhr.XDomainRequest = MockXDomainRequest
+```
+
 ## MIT Licenced
 
   [1]: http://xhr.spec.whatwg.org/#the-send()-method
