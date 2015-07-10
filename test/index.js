@@ -10,51 +10,47 @@ test("constructs and calls callback without throwing", function (assert) {
     })
 })
 
-test("can GET a url", function (assert) {
+test("[func] Can GET a url (cross-domain)", function (assert) {
     xhr({
-        headers: {
-            accept: "text/html"
-        },
-        uri: "http://reqr.es/api/stuff"
+        uri: "http://www.mocky.io/v2/55a02cb72651260b1a94f024",
+        useXDR: true
     }, function (err, resp, body) {
         assert.ifError(err, "no err")
         assert.equal(resp.statusCode, 200)
         assert.equal(typeof resp.rawRequest, "object")
-        assert.equal(resp.headers['content-type'].indexOf('application/json'), 0)
         assert.notEqual(resp.body.length, 0)
+        assert.equal(resp.body,'{"a":1}')
         assert.notEqual(body.length, 0)
         assert.end()
     })
 })
 
-test("Returns http error responses like npm's request", function (assert) {
-    xhr({
-        headers: {
-            accept: "text/html"
-        },
-        uri: "http://reqr.es/api/stuff/23"
-    }, function (err, resp, body) {
-        assert.ifError(err, "no err")
-        assert.equal(resp.statusCode, 404)
-        assert.equal(typeof resp.rawRequest, "object")
-        assert.end()
-    })
+test("[func] Returns http error responses like npm's request (cross-domain)", function (assert) {
+    if (!window.XDomainRequest) {
+        xhr({
+            uri: "http://www.mocky.io/v2/55a02d63265126221a94f025",
+            useXDR: true
+        }, function (err, resp, body) {
+            assert.ifError(err, "no err")
+            assert.equal(resp.statusCode, 404)
+            assert.equal(typeof resp.rawRequest, "object")
+            assert.end()
+        })
+    } else {
+        assert.end();
+    }
 })
 
-test("Times out to an error ", function (assert) {
+test("[func] Times out to an error ", function (assert) {
     xhr({
-        headers: {
-            accept: "text/html"
-        },
-        timeout: 1000,
-        uri: "http://reqr.es/api/stuff?delay=10"
+        timeout: 1,
+        uri: "/should-take-a-bit-to-parse?" + (new Array(300)).join("cachebreaker=" + Math.random().toFixed(5) + "&")
     }, function (err, resp, body) {
         assert.ok(err instanceof Error, "should return error")
         assert.equal(resp.statusCode, 0)
         assert.end()
     })
 })
-
 
 test("withCredentials option", function (assert) {
     if (!window.XDomainRequest) {
@@ -69,11 +65,6 @@ test("withCredentials option", function (assert) {
             req.withCredentials,
             "withCredentials set to true"
         )
-    } else {
-        assert.ok(
-            true,
-            "no point testing withCredentials in IE8/9"
-        )
     }
     assert.end()
 })
@@ -84,14 +75,8 @@ test("withCredentials ignored when using synchronous requests", function (assert
             withCredentials: true,
             sync: true
         }, function () {})
-        assert.ok(
-            !req.withCredentials,
+        assert.ok(!req.withCredentials,
             "sync overrides withCredentials"
-        )
-    } else {
-        assert.ok(
-            true,
-            "no point testing withCredentials in IE8/9"
         )
     }
     assert.end()
