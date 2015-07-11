@@ -25,7 +25,8 @@
   "dependencies": {
     "global": "~4.3.0",
     "once": "~1.1.1",
-    "parse-headers": "^2.0.0"
+    "parse-headers": "^2.0.0",
+    "zuul": "^3.2.0"
   },
   "devDependencies": {
     "pre-commit": "1.0.10",
@@ -41,6 +42,7 @@
   ],
   "scripts": {
     "test": "run-browser test/index.js -b | tap-spec",
-    "browser": "run-browser test/index.js"
+    "browser": "run-browser test/index.js",
+    "zuul": "zuul -- test/index.js"
   }
 }

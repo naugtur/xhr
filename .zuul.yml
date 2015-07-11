@@ -1,0 +1,13 @@
+ui: tape
+concurrency: 1
+browsers:
+  - name: chrome
+    version: latest
+  - name: ie
+    version: 8..latest
+  - name: safari
+    version: 6..latest
+  - name: firefox
+    version: 30..latest
+  - name: opera
+    version: 11..latest
