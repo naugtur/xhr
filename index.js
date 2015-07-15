@@ -9,6 +9,14 @@ module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
 createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
 
+
+function isEmpty(obj){
+    for(var i in obj){
+        if(obj.hasOwnProperty(i)) return false
+    }
+    return true
+}
+
 function createXHR(options, callback) {
     function readystatechange() {
         if (xhr.readyState === 4) {
@@ -55,6 +63,7 @@ function createXHR(options, callback) {
 
     // will load the data & process the response in a special response object
     function loadFunc() {
+        if (aborted) return
         var status
         clearTimeout(timeoutTimer)
         if(options.useXDR && xhr.status===undefined) {
@@ -106,6 +115,7 @@ function createXHR(options, callback) {
     }
 
     var key
+    var aborted
     var uri = xhr.url = options.uri || options.url
     var method = xhr.method = options.method || "GET"
     var body = options.body || options.data
@@ -142,6 +152,7 @@ function createXHR(options, callback) {
     if (!sync && options.timeout > 0 ) {
         timeoutTimer = setTimeout(function(){
             xhr.abort("timeout")
+            aborted=true//IE9 may still call readystatechange
         }, options.timeout+2 )
     }
 
@@ -151,7 +162,7 @@ function createXHR(options, callback) {
                 xhr.setRequestHeader(key, headers[key])
             }
         }
-    } else if (options.headers) {
+    } else if (options.headers && !isEmpty(options.headers)) {
         throw new Error("Headers cannot be set on an XDomainRequest object")
     }
 
