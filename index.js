@@ -151,9 +151,10 @@ function createXHR(options, callback) {
     // both npm's request and jquery 1.x use this kind of timeout, so this is being consistent
     if (!sync && options.timeout > 0 ) {
         timeoutTimer = setTimeout(function(){
-            xhr.abort("timeout")
             aborted=true//IE9 may still call readystatechange
-        }, options.timeout+2 )
+            xhr.abort("timeout")
+            errorFunc();
+        }, options.timeout )
     }
 
     if (xhr.setRequestHeader) {
