@@ -44,7 +44,7 @@ test("[func] Returns http error responses like npm's request (cross-domain)", fu
 test("[func] Times out to an error ", function (assert) {
     xhr({
         timeout: 1,
-        uri: "/should-take-a-bit-to-parse?" + (new Array(300)).join("cachebreaker=" + Math.random().toFixed(5) + "&")
+        uri: "/tests-bundle.js?should-take-a-bit-to-parse=1&" + (new Array(300)).join("cachebreaker=" + Math.random().toFixed(5) + "&")
     }, function (err, resp, body) {
         assert.ok(err instanceof Error, "should return error")
         assert.equal(resp.statusCode, 0)
