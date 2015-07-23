@@ -1,5 +1,5 @@
 {
-  "name": "xhr",
+  "name": "@neoscores/xhr",
   "version": "2.0.1",
   "description": "small xhr abstraction",
   "keywords": [
