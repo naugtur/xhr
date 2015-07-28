@@ -47,6 +47,7 @@ test("[func] Times out to an error ", function (assert) {
         uri: "/tests-bundle.js?should-take-a-bit-to-parse=1&" + (new Array(300)).join("cachebreaker=" + Math.random().toFixed(5) + "&")
     }, function (err, resp, body) {
         assert.ok(err instanceof Error, "should return error")
+        assert.equal(err.message, "XMLHttpRequest timeout")
         assert.equal(resp.statusCode, 0)
         assert.end()
     })
@@ -110,7 +111,7 @@ test("XDR usage (run on IE8 or 9)", function (assert) {
 test("handles errorFunc call with no arguments provided", function (assert) {
     var req = xhr({}, function (err) {
         assert.ok(err instanceof Error, "callback should get an error")
-        assert.equal(err.message, "unknown", "error message should say 'unknown'")
+        assert.equal(err.message, "Unknown XMLHttpRequest Error", "error message incorrect")
     })
     assert.doesNotThrow(function () {
         req.onerror()
