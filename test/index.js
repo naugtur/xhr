@@ -48,6 +48,7 @@ test("[func] Times out to an error ", function (assert) {
     }, function (err, resp, body) {
         assert.ok(err instanceof Error, "should return error")
         assert.equal(err.message, "XMLHttpRequest timeout")
+        assert.equal(err.code, "ETIMEDOUT")
         assert.equal(resp.statusCode, 0)
         assert.end()
     })

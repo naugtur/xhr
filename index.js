@@ -153,7 +153,9 @@ function createXHR(options, callback) {
         timeoutTimer = setTimeout(function(){
             aborted=true//IE9 may still call readystatechange
             xhr.abort("timeout")
-            errorFunc(new Error("XMLHttpRequest timeout"));
+            var e = new Error("XMLHttpRequest timeout")
+            e.code = "ETIMEDOUT"
+            errorFunc(e)
         }, options.timeout )
     }
 
