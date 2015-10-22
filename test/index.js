@@ -1,5 +1,6 @@
 var window = require("global/window")
 var test = require("tape")
+var forEach = require("for-each")
 
 var xhr = require("../index.js")
 
@@ -126,6 +127,106 @@ test("constructs and calls callback without throwing", function (assert) {
         xhr({})
     }, "callback is not optional")
     assert.end()
+})
+
+test("[func] xhr[method] get, put, post, patch", function (assert) {
+  var i = 0
+  methods = ["get", "put", "post", "patch"]
+  forEach(methods, function (method) {
+      xhr[method]({
+          uri: "https://httpbin.org/" + method
+      }, function (err, resp, body) {
+          i++
+          assert.ifError(err, "no err")
+          assert.equal(resp.statusCode, 200)
+          assert.equal(resp.method, method.toUpperCase())
+          assert.notEqual(resp.body.length, 0)
+
+          if (i === methods.length) assert.end()
+      })
+  })
+})
+
+test("xhr[method] get, put, post, patch with url shorthands", function (assert) {
+  var i = 0
+  methods = ["get", "put", "post", "patch"]
+  forEach(methods, function (method) {
+      xhr[method]("/some-test", function (err, resp, body) {
+          i++
+          assert.equal(resp.method, method.toUpperCase())
+
+          if (i === methods.length) assert.end()
+      })
+  })
+})
+
+test("xhr[method] get, put, post, patch with url shorthands and options", function (assert) {
+  var i = 0
+  methods = ["get", "put", "post", "patch"]
+  forEach(methods, function (method) {
+      xhr[method]("/some-test", { headers: { foo: 'bar' } }, function (err, resp, body) {
+          i++
+          assert.equal(resp.rawRequest.headers.foo, 'bar')
+          assert.equal(resp.method, method.toUpperCase())
+
+          if (i === methods.length) assert.end()
+      })
+  })
+})
+
+test("[func] xhr.head", function (assert) {
+    xhr.head({
+        uri: "https://httpbin.org/get",
+    }, function (err, resp, body) {
+        assert.ifError(err, "no err")
+        assert.equal(resp.statusCode, 200)
+        assert.equal(resp.method, "HEAD")
+        assert.notOk(resp.body)
+        assert.end()
+    })
+})
+
+test("xhr.head url shorthand", function (assert) {
+    xhr.head("https://httpbin.org/get", function (err, resp, body) {
+        assert.equal(resp.method, "HEAD")
+        assert.end()
+    })
+})
+
+test("[func] xhr.del", function (assert) {
+    xhr.del({
+        uri: "https://httpbin.org/delete"
+    }, function (err, resp, body) {
+        assert.ifError(err, "no err")
+        assert.equal(resp.statusCode, 200)
+        assert.equal(resp.method, "DELETE")
+        assert.notEqual(resp.body.length, 0)
+        assert.end()
+    })
+})
+
+test("xhr.del url shorthand", function (assert) {
+    xhr.del("https://httpbin.org/delete", function (err, resp, body) {
+        assert.equal(resp.method, "DELETE")
+        assert.end()
+    })
+})
+
+test("url signature without object", function (assert) {
+    xhr("/some-test", function (err, resp, body) {
+        assert.equal(resp.url, '/some-test')
+        assert.end()
+    })
+})
+
+test("url signature with object", function (assert) {
+    xhr("/some-test", {
+        headers: { "foo": "bar" }
+    }, function (err, resp, body) {
+        assert.equal(resp.url, '/some-test')
+        assert.equal(resp.rawRequest.headers.foo, 'bar')
+        assert.end()
+    })
 })
 
 test("XHR can be overridden", function (assert) {

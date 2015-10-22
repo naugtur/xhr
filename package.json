@@ -23,9 +23,11 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
+    "for-each": "~0.3.2",
     "global": "~4.3.0",
     "once": "~1.1.1",
-    "parse-headers": "^2.0.0"
+    "parse-headers": "^2.0.0",
+    "xtend": "^4.0.0"
   },
   "devDependencies": {
     "pre-commit": "1.0.10",
