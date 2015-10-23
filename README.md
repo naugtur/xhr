@@ -21,6 +21,13 @@ xhr({
 ```
 
 ## `var req = xhr(options, callback)`
+Using this invocation, `options` should include a `uri` property for the request.
+
+## `var req = xhr(url, callback)`
+`xhr` may also be called with a simple string instead of a set of options. In this case, a GET request will be made to that url.
+
+## `var req = xhr(url, options, callback)`
+The above may also be called with the standard set of options.
 
 ```js
 type XhrOptions = String | {
@@ -67,19 +74,14 @@ Your callback will be called once with the arguments
 Your callback will be called with an [`Error`][5] if there is an error in the browser that prevents sending the request.
 A HTTP 500 response is not going to cause an error to be returned.
 
-## Shorthands
 
-## `var req = xhr(url, callback)`
-`xhr` may also be called with a simple string instead of a set of options. In this case, a GET request will be made to that url.
-
-## `var req = xhr(url, options, callback)`
-The above shorthand may also be called with the standard set of options.
+## Method Shorthands
 
 ## `var req = xhr.{post, put, patch, del, head, get}(options, callback)`
 The `xhr` module has convience functions attached that will make requests with the given method.
 Each function is named after its method, with the exception of `DELETE` which is called `xhr.del` for compatibility.
 
-The method function shorthand may be combined with the above url shorthand for succinct and descriptive requests. For example,
+The method shorthands may be combined with the url-first form of `xhr` for succinct and descriptive requests. For example,
 
 ```js
 xhr.post('/post-to-me', function(err, resp) {
