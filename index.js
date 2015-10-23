@@ -13,7 +13,7 @@ createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest())
 
 forEach(["get", "put", "post", "patch", "head", "delete"], function(method) {
     createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
-        var options = initParams(uri, options, callback)
+        options = initParams(uri, options, callback)
         options.method = method.toUpperCase()
         return _createXHR(options)
     }
