@@ -69,13 +69,16 @@ A HTTP 500 response is not going to cause an error to be returned.
 
 ## Shorthands
 
-## `var req = xhr(url, callback)`
+### Skip options
+* `var req = xhr(url, callback)`
+
 `xhr` may also be called with a simple string instead of a set of options. In this case, a GET request will be made to that url.
 
-## `var req = xhr(url, options, callback)`
-The above shorthand may also be called with the standard set of options.
+### Convience methods
+* `var req = xhr.{post, put, patch, del, head, get}(url, callback)`
+* `var req = xhr.{post, put, patch, del, head, get}(options, callback)`
+* `var req = xhr.{post, put, patch, del, head, get}(url, options, callback)`
 
-## `var req = xhr.{post, put, patch, del, head, get}(options, callback)`
 The `xhr` module has convience functions attached that will make requests with the given method.
 Each function is named after its method, with the exception of `DELETE` which is called `xhr.del` for compatibility.
 
