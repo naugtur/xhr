@@ -1,26 +1,26 @@
 "use strict";
 var window = require("global/window")
 var once = require("once")
-var forEach = require("for-each")
+var isFunction = require("is-function")
 var parseHeaders = require("parse-headers")
 var xtend = require("xtend")
-
-var toString = Object.prototype.toString
 
 module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
 createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
 
-forEach(["get", "put", "post", "patch", "head", "delete"], function(method) {
+forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method) {
     createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
-        var options = initParams(uri, options, callback)
+        options = initParams(uri, options, callback)
         options.method = method.toUpperCase()
         return _createXHR(options)
     }
 })
 
-function isFunction(fn) {
-  return toString.call(fn) === "[object Function]"
+function forEachArray(array, iterator) {
+    for (var i = 0; i < array.length; i++) {
+        iterator(array[i])
+    }
 }
 
 function isEmpty(obj){
@@ -31,17 +31,15 @@ function isEmpty(obj){
 }
 
 function initParams(uri, options, callback) {
+    var params = uri
+
     if (isFunction(options)) {
         callback = options
-    }
-
-    var params
-    if (typeof options === "object") {
-      params = xtend(options, {uri: uri})
-    } else if (typeof uri === "string") {
-      params = xtend({uri: uri})
+        if (typeof uri === "string") {
+            params = {uri:uri}
+        }
     } else {
-      params = xtend(uri)
+        params = xtend(options, {uri: uri})
     }
 
     params.callback = callback
@@ -49,7 +47,7 @@ function initParams(uri, options, callback) {
 }
 
 function createXHR(uri, options, callback) {
-    var options = initParams(uri, options, callback)
+    options = initParams(uri, options, callback)
     return _createXHR(options)
 }
 
