@@ -3,20 +3,25 @@ var window = require("global/window")
 var once = require("once")
 var forEach = require("for-each")
 var parseHeaders = require("parse-headers")
-var xtend = require("xtend/immutable")
+var xtend = require("xtend")
 
+var toString = Object.prototype.toString
 
 module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
 createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
 
 forEach(["get", "put", "post", "patch", "head", "delete"], function(method) {
-    createXHR[method === "delete" ? "del" : method] = function(options, callback) {
-        var args = normalizeArgs.apply(null, arguments)
-        args.options.method = method.toUpperCase()
-        return _createXHR(args.options, args.callback)
+    createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
+        var options = initParams(uri, options, callback)
+        options.method = method.toUpperCase()
+        return _createXHR(options)
     }
 })
+
+function isFunction(fn) {
+  return toString.call(fn) === "[object Function]"
+}
 
 function isEmpty(obj){
     for(var i in obj){
@@ -25,44 +30,36 @@ function isEmpty(obj){
     return true
 }
 
-function normalizeArgs(arg1, arg2, arg3) {
-    var options, callback;
+function initParams(uri, options, callback) {
+    if (isFunction(options)) {
+        callback = options
+    }
 
-    if (typeof arg1 === "string") {
-        if (typeof arg2 === "object" && typeof arg3 === "function") {
-            // xhr(url, options, cb)
-            options = xtend(arg2)
-            options.uri = arg1
-            callback = arg3
-        } else {
-            // xhr(url, cb)
-            options = { uri: arg1 }
-            callback = arg2
-        }
+    var params
+    if (typeof options === "object") {
+      params = xtend(options, {uri: uri})
+    } else if (typeof uri === "string") {
+      params = xtend({uri: uri})
     } else {
-      // xhr(options, cb)
-      if (typeof arg1 === "undefined") {
-          throw new Error("options or url missing")
-      }
-      if(typeof arg2 === "undefined"){
-          throw new Error("callback argument missing")
-      }
-      options = arg1
-      callback = arg2
+      params = xtend(uri)
     }
 
-    return {
-      options: options,
-      callback: callback
+    params.callback = callback
+    return params
+}
+
+function createXHR(uri, options, callback) {
+    var options = initParams(uri, options, callback)
+    return _createXHR(options)
+}
+
+function _createXHR(options) {
+    var callback = options.callback
+    if(typeof callback === "undefined"){
+        throw new Error("callback argument missing")
     }
-}
+    callback = once(callback)
 
-function createXHR() {
-    var args = normalizeArgs.apply(null, arguments)
-    return _createXHR(args.options, args.callback)
-}
-
-function _createXHR(options, callback) {
     function readystatechange() {
         if (xhr.readyState === 4) {
             loadFunc()
@@ -138,9 +135,6 @@ function _createXHR(options, callback) {
         callback(err, response, response.body)
 
     }
-
-
-    callback = once(callback)
 
     var xhr = options.xhr || null
 
