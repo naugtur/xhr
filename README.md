@@ -36,7 +36,8 @@ type XhrOptions = String | {
     username: String?,
     password: String?,
     withCredentials: Boolean?,
-    responseType: String?
+    responseType: String?,
+    beforeSend: Function?
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
@@ -54,7 +55,7 @@ Your callback will be called once with the arguments
     headers: {},
     url: String,
     rawRequest: xhr
-}   
+}
 ```
  - `body`: HTTP response body - [`xhr.response`][6], [`xhr.responseText`][7] or
     [`xhr.responseXML`][8] depending on the request type.
@@ -62,11 +63,11 @@ Your callback will be called once with the arguments
     or [`XDomainRequest`][4] instance (if on IE8/IE9 &&
     `options.useXDR` is set to `true`)
  - `headers`: A collection of headers where keys are header names converted to lowercase
-    
 
-Your callback will be called with an [`Error`][5] if there is an error in the browser that prevents sending the request. 
-A HTTP 500 response is not going to cause an error to be returned. 
-    
+
+Your callback will be called with an [`Error`][5] if there is an error in the browser that prevents sending the request.
+A HTTP 500 response is not going to cause an error to be returned.
+
 If `options` is a string then it's a short hand for
     `{ method: "GET", uri: string }`
 
@@ -80,7 +81,7 @@ Specify the method the [`XMLHttpRequest`][3] should be opened
 Specify whether this is a cross origin (CORS) request for IE<10.
     Switches IE to use [`XDomainRequest`][4] instead of `XMLHttpRequest`.
     Ignored in other browsers.
-    
+
 Note that headers cannot be set on an XDomainRequest instance.
 
 ### `options.sync`
@@ -121,13 +122,17 @@ Additionally the response body is parsed as JSON
 
 Specify whether user credentials are to be included in a cross-origin
     request. Sets [`xhr.withCredentials`][10]. Defaults to false.
-    
-A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `withCredentials` is true. 
+
+A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `withCredentials` is true.
     The header needs to specify your origin explicitly or browser will abort the request.
 
 ### `options.responseType`
 
 Determines the data type of the `response`. Sets [`xhr.responseType`][11]. For example, a `responseType` of `document` will return a parsed `Document` object as the `response.body` for an XML resource.
+
+### `options.beforeSend`
+
+A function being called right before the `send` method of the `XMLHttpRequest` or `XDomainRequest` instance is called. The `XMLHttpRequest` or `XDomainRequest` instance is passed as an argument.
 
 ### `options.xhr`
 
