@@ -36,7 +36,8 @@ type XhrOptions = String | {
     username: String?,
     password: String?,
     withCredentials: Boolean?,
-    responseType: String?
+    responseType: String?,
+    beforeSend: Function?
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
@@ -159,6 +160,10 @@ A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `
 ### `options.responseType`
 
 Determines the data type of the `response`. Sets [`xhr.responseType`][11]. For example, a `responseType` of `document` will return a parsed `Document` object as the `response.body` for an XML resource.
+
+### `options.beforeSend`
+
+A function being called right before the `send` method of the `XMLHttpRequest` or `XDomainRequest` instance is called. The `XMLHttpRequest` or `XDomainRequest` instance is passed as an argument.
 
 ### `options.xhr`
 
