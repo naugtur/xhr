@@ -68,8 +68,39 @@ Your callback will be called once with the arguments
 Your callback will be called with an [`Error`][5] if there is an error in the browser that prevents sending the request.
 A HTTP 500 response is not going to cause an error to be returned.
 
-If `options` is a string then it's a short hand for
-    `{ method: "GET", uri: string }`
+## Other signatures
+
+* `var req = xhr(url, callback)` -
+a simple string instead of the options. In this case, a GET request will be made to that url.
+
+* `var req = xhr(url, options, callback)` -
+the above may also be called with the standard set of options.
+
+### Convience methods
+* `var req = xhr.{post, put, patch, del, head, get}(url, callback)`
+* `var req = xhr.{post, put, patch, del, head, get}(options, callback)`
+* `var req = xhr.{post, put, patch, del, head, get}(url, options, callback)`
+
+The `xhr` module has convience functions attached that will make requests with the given method.
+Each function is named after its method, with the exception of `DELETE` which is called `xhr.del` for compatibility.
+
+The method shorthands may be combined with the url-first form of `xhr` for succinct and descriptive requests. For example,
+
+```js
+xhr.post('/post-to-me', function(err, resp) {
+  console.log(resp.body)
+})
+```
+
+or
+
+```js
+xhr.del('/delete-me', { headers: { my: 'auth' } }, function (err, resp) {
+  console.log(resp.statusCode);
+})
+```
+
+## Options
 
 ### `options.method`
 
