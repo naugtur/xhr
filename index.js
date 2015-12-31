@@ -1,6 +1,5 @@
 "use strict";
 var window = require("global/window")
-var once = require("once")
 var isFunction = require("is-function")
 var parseHeaders = require("parse-headers")
 var xtend = require("xtend")
@@ -56,7 +55,6 @@ function _createXHR(options) {
     if(typeof callback === "undefined"){
         throw new Error("callback argument missing")
     }
-    callback = once(callback)
 
     function readystatechange() {
         if (xhr.readyState === 4) {
@@ -99,6 +97,7 @@ function _createXHR(options) {
         }
         evt.statusCode = 0
         callback(evt, failureResponse)
+        callback = noop
     }
 
     // will load the data & process the response in a special response object
@@ -131,6 +130,7 @@ function _createXHR(options) {
             err = new Error("Internal XMLHttpRequest Error")
         }
         callback(err, response, response.body)
+        callback = noop
 
     }
 
