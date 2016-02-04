@@ -36,12 +36,7 @@
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://github.com/Raynos/xhr/raw/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "scripts": {
     "test": "run-browser test/index.js -b | tap-spec",
     "browser": "run-browser test/index.js"
