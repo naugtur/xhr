@@ -102,7 +102,7 @@ function _createXHR(options) {
     }
 
     function serialize_params(obj) {
-        return Object.keys(obj).map( k => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]) ).join('&')
+        return Object.keys(obj).map( function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]) } ).join('&')
     }
 
     // will load the data & process the response in a special response object
