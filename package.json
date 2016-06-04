@@ -37,7 +37,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "run-browser test/index.js -b | tap-spec",
-    "browser": "run-browser test/index.js"
+    "test": "node test-server.js phantom | tap-spec",
+    "browser": "node test-server.js"
   }
 }
