@@ -44,7 +44,7 @@ test("[func] Returns http error responses like npm's request (cross-domain)", fu
 
 test("[func] Returns a falsey body for 204 responses", function(assert) {
     xhr({
-        uri: "/no-content"
+        uri: "/mock/no-content"
     }, function(err, resp, body) {
         assert.notOk(body, "body should be falsey")
         assert.equal(resp.statusCode, 204)
@@ -55,7 +55,7 @@ test("[func] Returns a falsey body for 204 responses", function(assert) {
 test("[func] Times out to an error ", function(assert) {
     xhr({
         timeout: 1,
-        uri: "/timeout"
+        uri: "/mock/timeout"
     }, function(err, resp, body) {
         assert.ok(err instanceof Error, "should return error")
         assert.equal(err.message, "XMLHttpRequest timeout")
