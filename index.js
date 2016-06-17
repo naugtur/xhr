@@ -68,8 +68,10 @@ function _createXHR(options) {
 
         if (xhr.response) {
             body = xhr.response
+        } else if (xhr.responseType === "document") {
+            return xhr.responseXML
         } else if (xhr.responseType === "text" || !xhr.responseType) {
-            body = xhr.responseText || xhr.responseXML
+            return xhr.responseText
         }
 
         if (isJson) {
