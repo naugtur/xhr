@@ -69,7 +69,9 @@ function _createXHR(options) {
         if (xhr.response) {
             body = xhr.response
         } else if (xhr.responseType === "text" || !xhr.responseType) {
-            body = xhr.responseText || xhr.responseXML
+            // responseXML is only accessible if the object's 'responseType' is '' or 'document'
+            if(xhr.responseType === "") body = xhr.responseText || xhr.responseXML;
+            else body = xhr.responseText;
         }
 
         if (isJson) {
