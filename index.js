@@ -69,8 +69,7 @@ function _createXHR(options) {
         if (xhr.response) {
             body = xhr.response
         } else {
-            var xml = getXml(xhr)
-            body = xhr.responseText || xml
+            body = xhr.responseText || getXml(xhr)
         }
 
         if (isJson) {
