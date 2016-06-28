@@ -68,8 +68,8 @@ function _createXHR(options) {
 
         if (xhr.response) {
             body = xhr.response
-        } else if (xhr.responseType === "text" || !xhr.responseType) {
-            var xml = (xhr.status === 204 && xhr.responseXML && xhr.responseXML.documentElement.nodeName === "parsererror") ? null : xhr.responseXML
+        } else {
+            var xml = getXml(xhr)
             body = xhr.responseText || xml
         }
 
@@ -215,6 +215,18 @@ function _createXHR(options) {
     return xhr
 
 
+}
+
+function getXml(xhr) {
+    if (xhr.responseType === "document") {
+        return xhr.responseXML
+    }
+    var firefoxBugTakenEffect = xhr.status === 204 && xhr.responseXML && xhr.responseXML.documentElement.nodeName === "parsererror"
+    if (xhr.responseType === "" && !firefoxBugTakenEffect) {
+        return xhr.responseXML
+    }
+
+    return null
 }
 
 function noop() {}
