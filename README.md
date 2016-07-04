@@ -180,7 +180,8 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
   - `options.body` should be a string. You need to serialize your object before passing to `xhr` for sending.
   - To serialize to JSON you can use
    `options.json` instead of `options.body` for convenience - then `xhr` will do the serialization and set content-type accordingly.
-
+- Where's stream API? `.pipe()` etc.
+  - Not implemented. You can't reasonably have that in the browser.
 
 
 ## Mocking Requests
