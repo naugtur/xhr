@@ -1,5 +1,9 @@
 module.exports = function (req, res) {
-    if (req.url === '/mock/no-content') {
+    console.log('mock:',req.url)
+    if (req.url === '/mock/200ok') {
+        res.statusCode = 200
+        res.end('')
+    } else if (req.url === '/mock/no-content') {
         res.statusCode = 204
         res.end('')
     } else if (req.url === '/mock/timeout') {
@@ -7,5 +11,5 @@ module.exports = function (req, res) {
             res.statusCode = 200
             res.end()
         }, 100)
-    }
+    } 
 }
