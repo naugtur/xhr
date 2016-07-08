@@ -1,6 +1,8 @@
 # xhr
 
-A small XMLHttpRequest wrapper. Designed for use with [browserify](http://browserify.org/).
+A small XMLHttpRequest wrapper. Designed for use with [browserify](http://browserify.org/), [webpack](https://webpack.github.io/) etc.
+
+API is a subset of [request](https://github.com/request/request) so that the same code can be used in the browser and Node.js.
 
 Browser support: IE8+ and everything else.
 
@@ -126,7 +128,7 @@ Specify whether this is a synchrounous request. Note that when
 
 Pass in body to be send across the [`XMLHttpRequest`][3].
     Generally should be a string. But anything that's valid as
-    a parameter to [`XMLHttpRequest.send`][1] should work
+    a parameter to [`XMLHttpRequest.send`][1] should work  (Buffer for file, etc.).
 
 ### `options.uri` or `options.url`
 
@@ -168,6 +170,19 @@ A function being called right before the `send` method of the `XMLHttpRequest` o
 ### `options.xhr`
 
 Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` or `XDomainRequest` constructors. Useful for testing.
+
+## FAQ
+
+- Why is my server's JSON response not parsed? I returned the right content-type.
+  - See `options.json` - you can set it to `true` on a GET request to tell `xhr` to parse the response body.
+  - Without `options.json` body is returned as-is (a string or when `responseType` is set and the browser supports it - a result of parsing JSON or XML)
+- How do I send an object or array as POST body?
+  - `options.body` should be a string. You need to serialize your object before passing to `xhr` for sending.
+  - To serialize to JSON you can use
+   `options.json` instead of `options.body` for convenience - then `xhr` will do the serialization and set content-type accordingly.
+- Where's stream API? `.pipe()` etc.
+  - Not implemented. You can't reasonably have that in the browser.
+
 
 ## Mocking Requests
 You can override the constructor used to create new requests for testing. When you're making a new request:
