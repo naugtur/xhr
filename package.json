@@ -1,6 +1,6 @@
 {
   "name": "xhr",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "small xhr abstraction",
   "keywords": [
     "xhr",
@@ -31,13 +31,13 @@
   "devDependencies": {
     "for-each": "^0.3.2",
     "pre-commit": "1.0.10",
-    "run-browser": "^2.0.2",
+    "run-browser": "naugtur/run-browser",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
   },
   "license": "MIT",
   "scripts": {
-    "test": "run-browser test/index.js -b | tap-spec",
-    "browser": "run-browser test/index.js"
+    "test": "run-browser test/index.js -b -m test/mock-server.js | tap-spec",
+    "browser": "run-browser -m test/mock-server.js test/index.js"
   }
 }

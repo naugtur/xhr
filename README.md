@@ -1,6 +1,8 @@
 # xhr
 
-A small xhr wrapper. Designed for use with [browserify](http://browserify.org/).
+A small XMLHttpRequest wrapper. Designed for use with [browserify](http://browserify.org/), [webpack](https://webpack.github.io/) etc.
+
+API is a subset of [request](https://github.com/request/request) so that the same code can be used in the browser and Node.js.
 
 Browser support: IE8+ and everything else.
 
@@ -57,8 +59,8 @@ Your callback will be called once with the arguments
     rawRequest: xhr
 }
 ```
- - `body`: HTTP response body - [`xhr.response`][6], [`xhr.responseText`][7] or
-    [`xhr.responseXML`][8] depending on the request type.
+ - `body`: HTTP response body - [`XMLHttpRequest.response`][6], [`XMLHttpRequest.responseText`][7] or
+    [`XMLHttpRequest.responseXML`][8] depending on the request type.
  - `rawRequest`: Original  [`XMLHttpRequest`][3] instance
     or [`XDomainRequest`][4] instance (if on IE8/IE9 &&
     `options.useXDR` is set to `true`)
@@ -105,7 +107,7 @@ xhr.del('/delete-me', { headers: { my: 'auth' } }, function (err, resp) {
 ### `options.method`
 
 Specify the method the [`XMLHttpRequest`][3] should be opened
-    with. Passed to [`xhr.open`][2]. Defaults to "GET"
+    with. Passed to [`XMLHttpRequest.open`][2]. Defaults to "GET"
 
 ### `options.useXDR`
 
@@ -126,16 +128,16 @@ Specify whether this is a synchrounous request. Note that when
 
 Pass in body to be send across the [`XMLHttpRequest`][3].
     Generally should be a string. But anything that's valid as
-    a parameter to [`xhr.send`][1] should work
+    a parameter to [`XMLHttpRequest.send`][1] should work  (Buffer for file, etc.).
 
 ### `options.uri` or `options.url`
 
-The uri to send a request to. Passed to [`xhr.open`][2]. `options.url` and `options.uri` are aliases for each other.
+The uri to send a request to. Passed to [`XMLHttpRequest.open`][2]. `options.url` and `options.uri` are aliases for each other.
 
 ### `options.headers`
 
 An object of headers that should be set on the request. The
-    key, value pair is passed to [`xhr.setRequestHeader`][9]
+    key, value pair is passed to [`XMLHttpRequest.setRequestHeader`][9]
 
 ### `options.timeout`
 
@@ -152,14 +154,14 @@ Additionally the response body is parsed as JSON
 ### `options.withCredentials`
 
 Specify whether user credentials are to be included in a cross-origin
-    request. Sets [`xhr.withCredentials`][10]. Defaults to false.
+    request. Sets [`XMLHttpRequest.withCredentials`][10]. Defaults to false.
 
 A wildcard `*` cannot be used in the `Access-Control-Allow-Origin` header when `withCredentials` is true.
     The header needs to specify your origin explicitly or browser will abort the request.
 
 ### `options.responseType`
 
-Determines the data type of the `response`. Sets [`xhr.responseType`][11]. For example, a `responseType` of `document` will return a parsed `Document` object as the `response.body` for an XML resource.
+Determines the data type of the `response`. Sets [`XMLHttpRequest.responseType`][11]. For example, a `responseType` of `document` will return a parsed `Document` object as the `response.body` for an XML resource.
 
 ### `options.beforeSend`
 
@@ -168,6 +170,19 @@ A function being called right before the `send` method of the `XMLHttpRequest` o
 ### `options.xhr`
 
 Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` or `XDomainRequest` constructors. Useful for testing.
+
+## FAQ
+
+- Why is my server's JSON response not parsed? I returned the right content-type.
+  - See `options.json` - you can set it to `true` on a GET request to tell `xhr` to parse the response body.
+  - Without `options.json` body is returned as-is (a string or when `responseType` is set and the browser supports it - a result of parsing JSON or XML)
+- How do I send an object or array as POST body?
+  - `options.body` should be a string. You need to serialize your object before passing to `xhr` for sending.
+  - To serialize to JSON you can use
+   `options.json` instead of `options.body` for convenience - then `xhr` will do the serialization and set content-type accordingly.
+- Where's stream API? `.pipe()` etc.
+  - Not implemented. You can't reasonably have that in the browser.
+
 
 ## Mocking Requests
 You can override the constructor used to create new requests for testing. When you're making a new request:
