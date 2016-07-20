@@ -66,7 +66,7 @@ function _createXHR(options) {
         // Chrome with requestType=blob throws errors arround when even testing access to responseText
         var body = undefined
 
-        if (xhr.response) {
+        if (xhr.response !== null) {
             body = xhr.response
         } else {
             body = xhr.responseText || getXml(xhr)
