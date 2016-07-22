@@ -161,6 +161,15 @@ test("[func] xhr[method] get, put, post, patch", function(assert) {
     })
 })
 
+test("result is an empty string", function(assert) {
+    xhr.get({
+        uri: "/mock/200ok"
+    }, function(err, resp, body) {
+        assert.equal(body, '')
+        assert.end()
+    })
+})
+
 test("xhr[method] get, put, post, patch with url shorthands", function(assert) {
     var i = 0
     forEach(methods, function(method) {
