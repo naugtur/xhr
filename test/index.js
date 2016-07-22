@@ -52,6 +52,22 @@ test("[func] Returns a falsy body for 204 responses", function(assert) {
     })
 })
 
+test("[func] Calls the callback once even if error is thrown issue #127", function(assert) {
+    var count = 0;
+    setTimeout(function(){
+        assert.equal(count, 1, "expected one call")
+        assert.end()
+    },100)
+    try{
+        xhr({
+            uri: "instanterror://foo"
+        }, function(err, resp, body) {
+            count++;
+            throw Error("dummy error")
+        })
+    } catch(e){}
+})
+
 test("[func] Times out to an error ", function(assert) {
     xhr({
         timeout: 1,
