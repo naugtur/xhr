@@ -51,9 +51,16 @@ function createXHR(uri, options, callback) {
 }
 
 function _createXHR(options) {
-    var callback = options.callback
-    if(typeof callback === "undefined"){
+    if(typeof options.callback === "undefined"){
         throw new Error("callback argument missing")
+    }
+
+    var called = false
+    var callback = function cbOnce(err, response, body){
+        if(!called){
+            called = true
+            options.callback(err, response, body)
+        }
     }
 
     function readystatechange() {
@@ -96,8 +103,7 @@ function _createXHR(options) {
             evt = new Error("" + (evt || "Unknown XMLHttpRequest Error") )
         }
         evt.statusCode = 0
-        callback(evt, failureResponse)
-        callback = noop
+        return callback(evt, failureResponse)
     }
 
     // will load the data & process the response in a special response object
@@ -129,9 +135,7 @@ function _createXHR(options) {
         } else {
             err = new Error("Internal XMLHttpRequest Error")
         }
-        callback(err, response, response.body)
-        callback = noop
-
+        return callback(err, response, response.body)
     }
 
     var xhr = options.xhr || null
