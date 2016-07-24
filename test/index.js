@@ -52,10 +52,11 @@ test("[func] Returns a falsy body for 204 responses", function(assert) {
     })
 })
 
-test("[func] Calls the callback once even if error is thrown issue #127", function(assert) {
+test("[func] Calls the callback at most once even if error is thrown issue #127", function(assert) {
+    //double call happened in chrome
     var count = 0;
     setTimeout(function(){
-        assert.equal(count, 1, "expected one call")
+        assert.ok(count <= 1, "expected at most one call")
         assert.end()
     },100)
     try{
