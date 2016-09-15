@@ -2,11 +2,23 @@
 
 A small XMLHttpRequest wrapper. Designed for use with [browserify](http://browserify.org/), [webpack](https://webpack.github.io/) etc.
 
-API is a subset of [request](https://github.com/request/request) so you can write universal JS modules by using `require('request')` in your code and adding a [browser](https://github.com/substack/node-browserify#browser-field) field to your `package.json` to allow your code to work in the browser as well as Node.js:
+API is a subset of [request](https://github.com/request/request) so you can write code that works in both node.js and the browser by using `require('request')` in your code and telling your browser bundler to load `xhr` instead of `request`.
+
+For browserify, add a [browser](https://github.com/substack/node-browserify#browser-field) field to your `package.json`:
 
 ```
 "browser": {
   "request": "xhr"
+}
+```
+
+For webpack, add a [resolve.alias](http://webpack.github.io/docs/configuration.html#resolve-alias) field to your configuration:
+
+```
+"resolve": {
+  "alias": {
+    "request$": "xhr"
+  }
 }
 ```
 
