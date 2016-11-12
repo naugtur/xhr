@@ -2,7 +2,25 @@
 
 A small XMLHttpRequest wrapper. Designed for use with [browserify](http://browserify.org/), [webpack](https://webpack.github.io/) etc.
 
-API is a subset of [request](https://github.com/request/request) so that the same code can be used in the browser and Node.js.
+API is a subset of [request](https://github.com/request/request) so you can write code that works in both node.js and the browser by using `require('request')` in your code and telling your browser bundler to load `xhr` instead of `request`.
+
+For browserify, add a [browser](https://github.com/substack/node-browserify#browser-field) field to your `package.json`:
+
+```
+"browser": {
+  "request": "xhr"
+}
+```
+
+For webpack, add a [resolve.alias](http://webpack.github.io/docs/configuration.html#resolve-alias) field to your configuration:
+
+```
+"resolve": {
+  "alias": {
+    "request$": "xhr"
+  }
+}
+```
 
 Browser support: IE8+ and everything else.
 
@@ -182,6 +200,16 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
    `options.json` instead of `options.body` for convenience - then `xhr` will do the serialization and set content-type accordingly.
 - Where's stream API? `.pipe()` etc.
   - Not implemented. You can't reasonably have that in the browser.
+- How do I add an `onprogress` listener?
+  - use `beforeSend` function for non-standard things that are browser specific. In this case:
+  ```js
+xhr({
+...
+  beforeSend: function(xhrObject){
+    xhrObject.onprogress = function(){}
+  }
+})
+```
 
 
 ## Mocking Requests
