@@ -58,15 +58,15 @@ test("[func] Calls the callback at most once even if error is thrown issue #127"
     setTimeout(function(){
         assert.ok(count <= 1, "expected at most one call")
         assert.end()
-    },100)
-    try{
+    }, 100)
+    try {
         xhr({
             uri: "instanterror://foo"
         }, function(err, resp, body) {
             count++;
             throw Error("dummy error")
         })
-    } catch(e){}
+    } catch (e) {}
 })
 
 test("[func] Times out to an error ", function(assert) {
@@ -175,6 +175,66 @@ test("[func] xhr[method] get, put, post, patch", function(assert) {
             assert.equal(resp.method, method.toUpperCase())
             if (i === methods.length) assert.end()
         })
+    })
+})
+
+test("[func] result is an empty string", function(assert) {
+    xhr.get({
+        uri: "/mock/200ok"
+    }, function(err, resp, body) {
+        assert.equal(body, '')
+        assert.end()
+    })
+})
+test("[func] result is empty JSON", function(assert) {
+    //some browsers accept empty response as JSON, some don't
+    try {
+        xhr.get({
+            uri: "/mock/200json-empty",
+            responseType: "json"
+        }, function(err, resp, body) {
+            assert.equal(body, null)
+            assert.end()
+        })
+    } catch (error) {
+        assert.equal(error.message, "SYNTAX_ERR: DOM Exception 12")
+        assert.end()
+    }
+})
+test("[func] result is a JSON false", function(assert) {
+    //some browsers accept 'false' response as JSON, some don't
+    try {
+        xhr.get({
+            uri: "/mock/200json-false",
+            responseType: "json"
+        }, function(err, resp, body) {
+            assert.equal(body, false)
+            assert.end()
+        })
+    } catch (error) {
+        assert.equal(error.message, "SYNTAX_ERR: DOM Exception 12")
+        assert.end()
+    }
+})
+test("[func] result is empty XML", function(assert) {
+    xhr.get({
+        uri: "/mock/200xml-empty",
+        responseType: "document"
+    }, function(err, resp, body) {
+        assert.equal(typeof body, "object")
+        //this differs across browsers:
+        assert.ok(body===null || body.location===null)
+        assert.end()
+    })
+})
+test("[func] result is valid XML", function(assert) {
+    xhr.get({
+        uri: "/mock/200xml",
+        responseType: "document"
+    }, function(err, resp, body) {
+        console.info(body)
+        assert.equal(typeof body, "object")
+        assert.end()
     })
 })
 
