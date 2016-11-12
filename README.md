@@ -51,8 +51,8 @@ type XhrOptions = String | {
     method: String?,
     timeout: Number?,
     headers: Object?,
-    body: String?,
-    json: Object?,
+    body: String||Object?,
+    json: Boolean?,
     username: String?,
     password: String?,
     withCredentials: Boolean?,
@@ -148,6 +148,8 @@ Pass in body to be send across the [`XMLHttpRequest`][3].
     Generally should be a string. But anything that's valid as
     a parameter to [`XMLHttpRequest.send`][1] should work  (Buffer for file, etc.).
 
+If `options.json` is `true`, then this must be a JSON-serializable object.
+
 ### `options.uri` or `options.url`
 
 The uri to send a request to. Passed to [`XMLHttpRequest.open`][2]. `options.url` and `options.uri` are aliases for each other.
@@ -163,8 +165,7 @@ Number of miliseconds to wait for response. Defaults to 0 (no timeout). Ignored 
 
 ### `options.json`
 
-A valid JSON serializable value to be send to the server. If this
-    is set then we serialize the value and use that as the body.
+If set to `true` then we serialize the value of `options.body` and send that as the request body.
     We also set the Content-Type to `"application/json"`.
 
 Additionally the response body is parsed as JSON
@@ -195,9 +196,11 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
   - See `options.json` - you can set it to `true` on a GET request to tell `xhr` to parse the response body.
   - Without `options.json` body is returned as-is (a string or when `responseType` is set and the browser supports it - a result of parsing JSON or XML)
 - How do I send an object or array as POST body?
-  - `options.body` should be a string. You need to serialize your object before passing to `xhr` for sending.
-  - To serialize to JSON you can use
-   `options.json` instead of `options.body` for convenience - then `xhr` will do the serialization and set content-type accordingly.
+  - `options.body` should be a string or any other value that's valid as
+  a parameter to [`XMLHttpRequest.send`][1]. Any other value needs to
+  be serialized before passed to `xhr` for sending.
+  - To serialize to JSON you can set
+   `options.json` to `true` for convenience - then `xhr` will do the serialization and set content-type accordingly.
 - Where's stream API? `.pipe()` etc.
   - Not implemented. You can't reasonably have that in the browser.
 - How do I add an `onprogress` listener?

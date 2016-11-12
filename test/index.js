@@ -189,6 +189,16 @@ test("xhr[method] get, put, post, patch with url shorthands", function(assert) {
     })
 })
 
+test("json encoded request body", function(assert) {
+    xhr.post("/mock/echo", {
+        json: true,
+        body: {foo: "bar"}
+    }, function(err, resp, body) {
+        assert.equal(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.deepEqual(body, {foo: "bar"})
+        assert.end()
+    })
+})
 
 test("xhr[method] get, put, post, patch with url shorthands and options", function(assert) {
     var i = 0
