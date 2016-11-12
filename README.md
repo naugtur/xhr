@@ -200,6 +200,16 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
    `options.json` instead of `options.body` for convenience - then `xhr` will do the serialization and set content-type accordingly.
 - Where's stream API? `.pipe()` etc.
   - Not implemented. You can't reasonably have that in the browser.
+- How do I add an `onprogress` listener?
+  - use `beforeSend` function for non-standard things that are browser specific. In this case:
+  ```js
+xhr({
+...
+  beforeSend: function(xhrObject){
+    xhrObject.onprogress = function(){}
+  }
+})
+```
 
 
 ## Mocking Requests
