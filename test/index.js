@@ -55,11 +55,13 @@ test("[func] Returns a falsy body for 204 responses", function(assert) {
 test("[func] Calls the callback at most once even if error is thrown issue #127", function(assert) {
     //double call happened in chrome
     var count = 0;
+    var onerror = window.onerror
+    window.onerror = console.error.bind(console)
     setTimeout(function() {
         assert.ok(count <= 1, "expected at most one call")
+        window.onerror = onerror
         assert.end()
     }, 100)
-    window.onerror = console.error.bind(console)
     try {
         xhr({
             uri: "instanterror://foo"
