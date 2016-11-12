@@ -55,19 +55,19 @@ test("[func] Returns a falsy body for 204 responses", function(assert) {
 test("[func] Calls the callback at most once even if error is thrown issue #127", function(assert) {
     //double call happened in chrome
     var count = 0;
-    setTimeout(function(){
+    setTimeout(function() {
         assert.ok(count <= 1, "expected at most one call")
         assert.end()
-    },100)
+    }, 100)
     window.onerror = console.error.bind(console)
-    try{
+    try {
         xhr({
             uri: "instanterror://foo"
         }, function(err, resp, body) {
             count++;
             throw Error("dummy error")
         })
-    } catch(e){}
+    } catch (e) {}
 })
 
 test("[func] Times out to an error ", function(assert) {
@@ -286,4 +286,9 @@ test("XHR can be overridden", function(assert) {
     }, function() {});
     assert.equal(xdrs, 1, "created the custom XDR")
     assert.end()
+})
+
+test('close browser after everything', function(assert) {
+    assert.end()
+    window.close()
 })
