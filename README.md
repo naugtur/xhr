@@ -51,8 +51,8 @@ type XhrOptions = String | {
     method: String?,
     timeout: Number?,
     headers: Object?,
-    body: String||Object?,
-    json: Boolean?,
+    body: String? | Object?,
+    json: Boolean? | Object?,
     username: String?,
     password: String?,
     withCredentials: Boolean?,
@@ -148,7 +148,7 @@ Pass in body to be send across the [`XMLHttpRequest`][3].
     Generally should be a string. But anything that's valid as
     a parameter to [`XMLHttpRequest.send`][1] should work  (Buffer for file, etc.).
 
-If `options.json` is `true`, then this must be a JSON-serializable object.
+If `options.json` is `true`, then this must be a JSON-serializable object. `options.body` is passed to `JSON.stringify` and sent.
 
 ### `options.uri` or `options.url`
 
@@ -165,10 +165,11 @@ Number of miliseconds to wait for response. Defaults to 0 (no timeout). Ignored 
 
 ### `options.json`
 
-If set to `true` then we serialize the value of `options.body` and send that as the request body.
-    We also set the Content-Type to `"application/json"`.
+Set to `true` to send request as `application/json` (see `options.body`) and parse response from JSON.
 
-Additionally the response body is parsed as JSON
+For backwards compatibility `options.json` can also be a valid JSON-serializable value to be sent to the server. Additionally the response body is still parsed as JSON
+
+For sending booleans as JSON body see FAQ
 
 ### `options.withCredentials`
 
@@ -196,14 +197,13 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
   - See `options.json` - you can set it to `true` on a GET request to tell `xhr` to parse the response body.
   - Without `options.json` body is returned as-is (a string or when `responseType` is set and the browser supports it - a result of parsing JSON or XML)
 - How do I send an object or array as POST body?
-  - `options.body` should be a string or any other value that's valid as
-  a parameter to [`XMLHttpRequest.send`][1]. Any other value needs to
-  be serialized before passed to `xhr` for sending.
-  - To serialize to JSON you can set
-   `options.json` to `true` for convenience - then `xhr` will do the serialization and set content-type accordingly.
+  - `options.body` should be a string. You need to serialize your object before passing to `xhr` for sending.
+  - To serialize to JSON you can use
+   `options.json` instead of `options.body` for convenience - then `xhr` will do the serialization and set content-type accordingly.
 - Where's stream API? `.pipe()` etc.
   - Not implemented. You can't reasonably have that in the browser.
-
+- Why can't I send `"true"` as body by passing it as `options.json` anymore?
+  - Accepting `true` as a value was a bug. Despite what `JSON.stringify` does, the string `"true"` is not valid JSON. If you're sending booleans as JSON, please consider wrapping them in an object or array to save yourself from more trouble in the future. To bring back the old behavior, hardcode `options.json` to `true` and set `options.body` to your boolean value. 
 
 ## Mocking Requests
 You can override the constructor used to create new requests for testing. When you're making a new request:
