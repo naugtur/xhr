@@ -46,7 +46,7 @@ test("[func] Returns a falsy body for 204 responses", function(assert) {
     xhr({
         uri: "/mock/no-content"
     }, function(err, resp, body) {
-        assert.notOk(body, "body should be falsey")
+        assert.notOk(body, "body should be falsy")
         assert.equal(resp.statusCode, 204)
         assert.end()
     })
@@ -59,6 +59,7 @@ test("[func] Calls the callback at most once even if error is thrown issue #127"
         assert.ok(count <= 1, "expected at most one call")
         assert.end()
     },100)
+    window.onerror = console.error.bind(console)
     try{
         xhr({
             uri: "instanterror://foo"
