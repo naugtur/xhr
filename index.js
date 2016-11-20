@@ -174,6 +174,9 @@ function _createXHR(options) {
     xhr.onprogress = function () {
         // IE must die
     }
+    xhr.onabort = function(){
+        aborted = true;
+    }
     xhr.ontimeout = errorFunc
     xhr.open(method, uri, !sync, options.username, options.password)
     //has to be after open
@@ -185,7 +188,8 @@ function _createXHR(options) {
     // both npm's request and jquery 1.x use this kind of timeout, so this is being consistent
     if (!sync && options.timeout > 0 ) {
         timeoutTimer = setTimeout(function(){
-            aborted=true//IE9 may still call readystatechange
+            if (aborted) return
+            aborted = true//IE9 may still call readystatechange
             xhr.abort("timeout")
             var e = new Error("XMLHttpRequest timeout")
             e.code = "ETIMEDOUT"

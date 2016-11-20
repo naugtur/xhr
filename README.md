@@ -203,7 +203,17 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
 - Where's stream API? `.pipe()` etc.
   - Not implemented. You can't reasonably have that in the browser.
 - Why can't I send `"true"` as body by passing it as `options.json` anymore?
-  - Accepting `true` as a value was a bug. Despite what `JSON.stringify` does, the string `"true"` is not valid JSON. If you're sending booleans as JSON, please consider wrapping them in an object or array to save yourself from more trouble in the future. To bring back the old behavior, hardcode `options.json` to `true` and set `options.body` to your boolean value. 
+  - Accepting `true` as a value was a bug. Despite what `JSON.stringify` does, the string `"true"` is not valid JSON. If you're sending booleans as JSON, please consider wrapping them in an object or array to save yourself from more trouble in the future. To bring back the old behavior, hardcode `options.json` to `true` and set `options.body` to your boolean value.
+- How do I add an `onprogress` listener?
+  - use `beforeSend` function for non-standard things that are browser specific. In this case:
+  ```js
+xhr({
+...
+  beforeSend: function(xhrObject){
+    xhrObject.onprogress = function(){}
+  }
+})
+```
 
 ## Mocking Requests
 You can override the constructor used to create new requests for testing. When you're making a new request:
