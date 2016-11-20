@@ -30,7 +30,6 @@ test("[func] Returns http error responses like npm's request (cross-domain)", fu
     if (!window.XDomainRequest) {
         xhr({
             uri: "http://www.mocky.io/v2/55a02d63265126221a94f025",
-            useXDR: true
         }, function(err, resp, body) {
             assert.ifError(err, "no err")
             assert.equal(resp.statusCode, 404)
@@ -55,18 +54,18 @@ test("[func] Returns a falsy body for 204 responses", function(assert) {
 test("[func] Calls the callback at most once even if error is thrown issue #127", function(assert) {
     //double call happened in chrome
     var count = 0;
-    setTimeout(function(){
+    setTimeout(function() {
         assert.ok(count <= 1, "expected at most one call")
         assert.end()
-    },100)
-    try{
+    }, 100)
+    try {
         xhr({
             uri: "instanterror://foo"
         }, function(err, resp, body) {
             count++;
             throw Error("dummy error")
         })
-    } catch(e){}
+    } catch (e) {}
 })
 
 test("[func] Times out to an error ", function(assert) {
@@ -189,6 +188,34 @@ test("xhr[method] get, put, post, patch with url shorthands", function(assert) {
     })
 })
 
+test("[func] sends options.body as json body when options.json === true", function(assert) {
+    xhr.post("/mock/echo", {
+        json: true,
+        body: {
+            foo: "bar"
+        }
+    }, function(err, resp, body) {
+        assert.equal(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.deepEqual(body, {
+            foo: "bar"
+        })
+        assert.end()
+    })
+})
+
+test("[func] sends options.json as body when it's not a boolean", function(assert) {
+    xhr.post("/mock/echo", {
+        json: {
+            foo: "bar"
+        }
+    }, function(err, resp, body) {
+        assert.equal(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.deepEqual(body, {
+            foo: "bar"
+        })
+        assert.end()
+    })
+})
 
 test("xhr[method] get, put, post, patch with url shorthands and options", function(assert) {
     var i = 0

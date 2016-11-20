@@ -163,7 +163,7 @@ function _createXHR(options) {
         headers["accept"] || headers["Accept"] || (headers["Accept"] = "application/json") //Don't override existing accept header declared by user
         if (method !== "GET" && method !== "HEAD") {
             headers["content-type"] || headers["Content-Type"] || (headers["Content-Type"] = "application/json") //Don't override existing accept header declared by user
-            body = JSON.stringify(options.json)
+            body = JSON.stringify(options.json === true ? body : options.json)
         }
     }
 
