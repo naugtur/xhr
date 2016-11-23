@@ -158,7 +158,7 @@ function _createXHR(options) {
     var isJson = false
     var timeoutTimer
 
-    if ("json" in options) {
+    if ("json" in options && options.json !== false) {
         isJson = true
         headers["accept"] || headers["Accept"] || (headers["Accept"] = "application/json") //Don't override existing accept header declared by user
         if (method !== "GET" && method !== "HEAD") {

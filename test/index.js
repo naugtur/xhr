@@ -203,6 +203,17 @@ test("[func] sends options.body as json body when options.json === true", functi
     })
 })
 
+test("[func] doesn't freak out when json option is false", function(assert) {
+    xhr.post("/mock/echo", {
+        json: false,
+        body: "{\"a\":1}"
+    }, function(err, resp, body) {
+        assert.notEqual(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.equal(body, "{\"a\":1}")
+        assert.end()
+    })
+})
+
 test("[func] sends options.json as body when it's not a boolean", function(assert) {
     xhr.post("/mock/echo", {
         json: {
