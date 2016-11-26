@@ -41,6 +41,17 @@ test("[func] Returns http error responses like npm's request (cross-domain)", fu
     }
 })
 
+test("[func] Request to domain with not allowed cross-domain", function(assert) {
+    xhr({
+        uri: "http://www.mocky.io/v2/57bb70c21000002f175850bd",
+    }, function(err, resp, body) {
+        assert.ok(err instanceof Error, "should return error")
+        assert.equal(resp.statusCode, 0)
+        assert.equal(typeof resp.rawRequest, "object")
+        assert.end()
+    })
+})
+
 test("[func] Returns a falsy body for 204 responses", function(assert) {
     xhr({
         uri: "/mock/no-content"
