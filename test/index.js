@@ -30,7 +30,6 @@ test("[func] Returns http error responses like npm's request (cross-domain)", fu
     if (!window.XDomainRequest) {
         xhr({
             uri: "http://www.mocky.io/v2/55a02d63265126221a94f025",
-            useXDR: true
         }, function(err, resp, body) {
             assert.ifError(err, "no err")
             assert.equal(resp.statusCode, 404)
@@ -40,6 +39,17 @@ test("[func] Returns http error responses like npm's request (cross-domain)", fu
     } else {
         assert.end();
     }
+})
+
+test("[func] Request to domain with not allowed cross-domain", function(assert) {
+    xhr({
+        uri: "http://www.mocky.io/v2/57bb70c21000002f175850bd",
+    }, function(err, resp, body) {
+        assert.ok(err instanceof Error, "should return error")
+        assert.equal(resp.statusCode, 0)
+        assert.equal(typeof resp.rawRequest, "object")
+        assert.end()
+    })
 })
 
 test("[func] Returns a falsy body for 204 responses", function(assert) {
@@ -192,6 +202,45 @@ test("xhr[method] get, put, post, patch with url shorthands", function(assert) {
     })
 })
 
+test("[func] sends options.body as json body when options.json === true", function(assert) {
+    xhr.post("/mock/echo", {
+        json: true,
+        body: {
+            foo: "bar"
+        }
+    }, function(err, resp, body) {
+        assert.equal(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.deepEqual(body, {
+            foo: "bar"
+        })
+        assert.end()
+    })
+})
+
+test("[func] doesn't freak out when json option is false", function(assert) {
+    xhr.post("/mock/echo", {
+        json: false,
+        body: "{\"a\":1}"
+    }, function(err, resp, body) {
+        assert.notEqual(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.equal(body, "{\"a\":1}")
+        assert.end()
+    })
+})
+
+test("[func] sends options.json as body when it's not a boolean", function(assert) {
+    xhr.post("/mock/echo", {
+        json: {
+            foo: "bar"
+        }
+    }, function(err, resp, body) {
+        assert.equal(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.deepEqual(body, {
+            foo: "bar"
+        })
+        assert.end()
+    })
+})
 
 test("xhr[method] get, put, post, patch with url shorthands and options", function(assert) {
     var i = 0
