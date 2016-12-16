@@ -143,7 +143,7 @@ function _createXHR(options) {
     var aborted
     var uri = xhr.url = options.uri || options.url
     var method = xhr.method = options.method || "GET"
-    var body = options.body || options.data || null
+    var body = options.body || options.data
     var headers = xhr.headers = options.headers || {}
     var sync = !!options.sync
     var isJson = false
@@ -216,6 +216,9 @@ function _createXHR(options) {
         options.beforeSend(xhr)
     }
 
+    // Microsoft Edge browsers may throw errors when calling xhr.send() with an undefined body, so we set the body to null if body is undefined.
+    // See https://github.com/naugtur/xhr/issues/100.
+    body = body || null;
     xhr.send(body)
 
     return xhr
