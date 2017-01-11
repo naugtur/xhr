@@ -141,10 +141,10 @@ function _createXHR(options) {
 
     var key
     var aborted
-    var uri = xhr.url = options.uri || options.url
-    var method = xhr.method = options.method || "GET"
+    var uri = options.uri || options.url
+    var method = options.method || "GET"
     var body = options.body || options.data
-    var headers = xhr.headers = options.headers || {}
+    var headers = options.headers || {}
     var sync = !!options.sync
     var isJson = false
     var timeoutTimer
