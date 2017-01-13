@@ -19,6 +19,7 @@ test("[func] Can GET a url (cross-domain)", function(assert) {
         assert.ifError(err, "no err")
         assert.equal(resp.statusCode, 200)
         assert.equal(typeof resp.rawRequest, "object")
+        assert.equal(typeof resp.request, "object")
         assert.notEqual(resp.body.length, 0)
         assert.equal(resp.body, '{"a":1}')
         assert.notEqual(body.length, 0)
@@ -34,6 +35,7 @@ test("[func] Returns http error responses like npm's request (cross-domain)", fu
             assert.ifError(err, "no err")
             assert.equal(resp.statusCode, 404)
             assert.equal(typeof resp.rawRequest, "object")
+            assert.equal(typeof resp.request, "object")
             assert.end()
         })
     } else {
@@ -48,6 +50,7 @@ test("[func] Request to domain with not allowed cross-domain", function(assert) 
         assert.ok(err instanceof Error, "should return error")
         assert.equal(resp.statusCode, 0)
         assert.equal(typeof resp.rawRequest, "object")
+        assert.equal(typeof resp.request, "object")
         assert.end()
     })
 })
@@ -191,11 +194,11 @@ test("[func] xhr[method] get, put, post, patch", function(assert) {
 test("xhr[method] get, put, post, patch with url shorthands", function(assert) {
     var i = 0
     forEach(methods, function(method) {
-        var req = xhr[method]("/some-test", function() {})
-        i++
-        assert.equal(req.method, method.toUpperCase())
-
-        if (i === methods.length) assert.end()
+        var req = xhr[method]("/some-404", function(err, resp) {
+            i++
+            assert.equal(resp.request.method, method.toUpperCase())
+            if (i === methods.length) assert.end()
+        })
     })
 })
 
@@ -206,7 +209,7 @@ test("[func] sends options.body as json body when options.json === true", functi
             foo: "bar"
         }
     }, function(err, resp, body) {
-        assert.equal(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.equal(resp.request.headers["Content-Type"], "application/json")
         assert.deepEqual(body, {
             foo: "bar"
         })
@@ -219,7 +222,7 @@ test("[func] doesn't freak out when json option is false", function(assert) {
         json: false,
         body: "{\"a\":1}"
     }, function(err, resp, body) {
-        assert.notEqual(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.notEqual(resp.request.headers["Content-Type"], "application/json")
         assert.equal(body, "{\"a\":1}")
         assert.end()
     })
@@ -231,7 +234,7 @@ test("[func] sends options.json as body when it's not a boolean", function(asser
             foo: "bar"
         }
     }, function(err, resp, body) {
-        assert.equal(resp.rawRequest.headers["Content-Type"], "application/json")
+        assert.equal(resp.request.headers["Content-Type"], "application/json")
         assert.deepEqual(body, {
             foo: "bar"
         })
@@ -248,7 +251,7 @@ test("xhr[method] get, put, post, patch with url shorthands and options", functi
             }
         }, function(err, resp, body) {
             i++
-            assert.equal(resp.rawRequest.headers.foo, 'bar')
+            assert.equal(resp.request.headers.foo, 'bar')
             assert.equal(resp.method, method.toUpperCase())
 
             if (i === methods.length) assert.end()
@@ -307,7 +310,7 @@ test("url signature with object", function(assert) {
         }
     }, function(err, resp, body) {
         assert.equal(resp.url, '/some-test')
-        assert.equal(resp.rawRequest.headers.foo, 'bar')
+        assert.equal(resp.request.headers.foo, 'bar')
         assert.end()
     })
 })

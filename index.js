@@ -118,7 +118,8 @@ function _createXHR(options) {
                 method: method,
                 headers: {},
                 url: uri,
-                rawRequest: xhr
+                rawRequest: xhr,
+                request: request
             }
             if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
                 response.headers = parseHeaders(xhr.getAllResponseHeaders())
@@ -142,10 +143,18 @@ function _createXHR(options) {
     var key
     var aborted
     var uri = options.uri || options.url
+
     var method = options.method || "GET"
     var body = options.body || options.data
     var headers = options.headers || {}
     var sync = !!options.sync
+    var request = {
+        uri: uri,
+        url:uri,
+        headers:headers,
+        body:body,
+        method:method
+    }
     var isJson = false
     var timeoutTimer
     var failureResponse = {
@@ -154,7 +163,8 @@ function _createXHR(options) {
         statusCode: 0,
         method: method,
         url: uri,
-        rawRequest: xhr
+        rawRequest: xhr,
+        request: request
     }
 
     if ("json" in options && options.json !== false) {
