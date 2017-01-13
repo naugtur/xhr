@@ -3,8 +3,8 @@ module.exports = function(req, res) {
     if (req.url === '/mock/200ok') {
         res.statusCode = 200
         res.end('')
-    } else if (req.url === '/mock/no-content') {
-        res.statusCode = 204
+    } else if (req.url.substr(0,16) === '/mock/no-content') {
+        res.statusCode = ~~(req.url.substring(17))
         res.end('')
     } else if (req.url === '/mock/echo') {
         res.statusCode = 200

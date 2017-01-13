@@ -52,14 +52,39 @@ test("[func] Request to domain with not allowed cross-domain", { timeout: 500 },
     })
 })
 
-test("[func] Returns a falsy body for 204 responses", { timeout: 500 }, function(assert) {
+test("[func] Returns a falsy body for 201 202 204 205 responses", { timeout: 500 }, function(assert) {
+  assert.plan(8)
+    // xhr({
+    //   uri: "/mock/no-content/200"
+    // }, function(err, resp, body) {
+    //   assert.notOk(body, "body should be falsy")
+    //   assert.equal(resp.statusCode, 200)
+    // })
     xhr({
-        uri: "/mock/no-content"
+        uri: "/mock/no-content/201"
     }, function(err, resp, body) {
-        assert.notOk(body, "body should be falsey")
-        assert.equal(resp.statusCode, 204)
-        assert.end()
+        assert.notOk(body, "body should be falsy")
+        assert.equal(resp.statusCode, 201)
     })
+    xhr({
+        uri: "/mock/no-content/202"
+    }, function(err, resp, body) {
+        assert.notOk(body, "body should be falsy")
+        assert.equal(resp.statusCode, 202)
+    })
+    xhr({
+        uri: "/mock/no-content/204"
+    }, function(err, resp, body) {
+        assert.notOk(body, "body should be falsy")
+        assert.equal(resp.statusCode, 204)
+    })
+    xhr({
+        uri: "/mock/no-content/205"
+    }, function(err, resp, body) {
+        assert.notOk(body, "body should be falsy")
+        assert.equal(resp.statusCode, 205)
+    })
+
 })
 
 test("[func] Calls the callback at most once even if error is thrown issue #127", { timeout: 500 }, function(assert) {
