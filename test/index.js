@@ -11,7 +11,7 @@ test("constructs and calls callback without throwing", { timeout: 500 }, functio
     })
 })
 
-test("[func] Can GET a url (cross-domain)", { timeout: 500 }, function(assert) {
+test("[func] Can GET a url (cross-domain)", { timeout: 2000 }, function(assert) {
     xhr({
         uri: "http://www.mocky.io/v2/55a02cb72651260b1a94f024",
         useXDR: true
@@ -26,7 +26,7 @@ test("[func] Can GET a url (cross-domain)", { timeout: 500 }, function(assert) {
     })
 })
 
-test("[func] Returns http error responses like npm's request (cross-domain)", { timeout: 500 }, function(assert) {
+test("[func] Returns http error responses like npm's request (cross-domain)", { timeout: 2000 }, function(assert) {
     if (!window.XDomainRequest) {
         xhr({
             uri: "http://www.mocky.io/v2/55a02d63265126221a94f025",
@@ -41,7 +41,7 @@ test("[func] Returns http error responses like npm's request (cross-domain)", { 
     }
 })
 
-test("[func] Request to domain with not allowed cross-domain", { timeout: 500 }, function(assert) {
+test("[func] Request to domain with not allowed cross-domain", { timeout: 2000 }, function(assert) {
     xhr({
         uri: "http://www.mocky.io/v2/57bb70c21000002f175850bd",
     }, function(err, resp, body) {
@@ -52,25 +52,19 @@ test("[func] Request to domain with not allowed cross-domain", { timeout: 500 },
     })
 })
 
-test("[func] Returns a falsy body for 201 202 204 205 responses", { timeout: 500 }, function(assert) {
+test("[func] Returns a falsy body for 2xx responses", { timeout: 500 }, function(assert) {
   assert.plan(8)
-    // xhr({
-    //   uri: "/mock/no-content/200"
-    // }, function(err, resp, body) {
-    //   assert.notOk(body, "body should be falsy")
-    //   assert.equal(resp.statusCode, 200)
-    // })
+    xhr({
+        uri: "/mock/no-content/200"
+    }, function(err, resp, body) {
+        assert.notOk(body, "body should be falsy")
+        assert.equal(resp.statusCode, 200)
+    })
     xhr({
         uri: "/mock/no-content/201"
     }, function(err, resp, body) {
         assert.notOk(body, "body should be falsy")
         assert.equal(resp.statusCode, 201)
-    })
-    xhr({
-        uri: "/mock/no-content/202"
-    }, function(err, resp, body) {
-        assert.notOk(body, "body should be falsy")
-        assert.equal(resp.statusCode, 202)
     })
     xhr({
         uri: "/mock/no-content/204"
