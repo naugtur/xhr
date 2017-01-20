@@ -65,7 +65,7 @@ function _createXHR(options) {
 
     function readystatechange() {
         if (xhr.readyState === 4) {
-            loadFunc()
+            setTimeout(loadFunc, 0)
         }
     }
 
