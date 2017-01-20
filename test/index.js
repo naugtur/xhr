@@ -321,7 +321,7 @@ test("aborting XHR immediately prevents callback from being called", { timeout: 
 })
 
 test("aborting XHR asynchronously still prevents callback from being called", { timeout: 500 }, function(assert) {
-    var req = xhr({ uri: "/mock/200ok" }, function(err, response) {
+    var req = xhr({ uri: "/mock/timeout" }, function(err, response) {
         assert.fail('this callback should not be called');
     });
     setTimeout(function() {
