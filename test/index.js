@@ -336,7 +336,9 @@ test("aborting XHR immediately prevents callback from being called", { timeout: 
         assert.fail('this callback should not be called');
     });
     req.abort();
-    assert.end()
+    setTimeout(function() {
+        assert.end()
+    }, 2)
 })
 
 test("aborting XHR asynchronously still prevents callback from being called", { timeout: 500 }, function(assert) {
@@ -345,8 +347,10 @@ test("aborting XHR asynchronously still prevents callback from being called", { 
     });
     setTimeout(function() {
         req.abort();
-        assert.end()
     }, 0)
+    setTimeout(function() {
+        assert.end()
+    }, 2)
 })
 
 test("XHR can be overridden", { timeout: 500 }, function(assert) {
