@@ -88,14 +88,14 @@ test("[func] Calls the callback at most once even if error is thrown issue #127"
         assert.ok(count <= 1, "expected at most one call")
         assert.end()
     }, 100)
-    assert.throws(function(){
+    try {
         xhr({
             uri: "instanterror://foo"
         }, function(err, resp, body) {
             count++;
             throw Error("dummy error")
         })
-    })
+    } catch(e){}
 })
 
 test("[func] Times out to an error ", { timeout: 500 }, function(assert) {
