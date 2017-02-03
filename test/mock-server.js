@@ -4,7 +4,7 @@ module.exports = function(req, res) {
         res.statusCode = 200
         res.end('')
     } else if (req.url.substr(0,16) === '/mock/no-content') {
-        res.statusCode = ~~(req.url.substring(17))
+        res.statusCode = parseInt(req.url.substring(17), 10)
         res.end('')
     } else if (req.url === '/mock/echo') {
         res.statusCode = 200
