@@ -331,6 +331,24 @@ test("url signature with object", { timeout: 500 }, function(assert) {
     })
 })
 
+test("aborting XHR immediately prevents callback from being called", { timeout: 500 }, function(assert) {
+    var req = xhr({ uri: "/mock/200ok" }, function(err, response) {
+        assert.fail('this callback should not be called');
+    });
+    req.abort();
+    assert.end()
+})
+
+test("aborting XHR asynchronously still prevents callback from being called", { timeout: 500 }, function(assert) {
+    var req = xhr({ uri: "/mock/timeout" }, function(err, response) {
+        assert.fail('this callback should not be called');
+    });
+    setTimeout(function() {
+        req.abort();
+        assert.end()
+    }, 0)
+})
+
 test("XHR can be overridden", { timeout: 500 }, function(assert) {
     var xhrs = 0
     var noop = function() {}
