@@ -210,7 +210,7 @@ test("[func] xhr[method] get, put, post, patch", { timeout: 500 }, function(asse
 test("xhr[method] get, put, post, patch with url shorthands", { timeout: 500 }, function(assert) {
     var i = 0
     forEach(methods, function(method) {
-        var req = xhr[method]("/some-test", { timeout: 500 }, function() {})
+        var req = xhr[method]("/some-test", function() {})
         i++
         assert.equal(req.method, method.toUpperCase())
 
@@ -275,7 +275,7 @@ test("xhr[method] get, put, post, patch with url shorthands and options", { time
     })
 })
 if (!window.XDomainRequest) {
-    test("[func] xhr.head", { timeout: 500 }, function(assert) {
+    test("[func] xhr.head", function(assert) {
         xhr.head({
             uri: "/mock/200ok",
         }, function(err, resp, body) {
@@ -288,7 +288,7 @@ if (!window.XDomainRequest) {
     })
 
     test("xhr.head url shorthand", { timeout: 500 }, function(assert) {
-        xhr.head("/mock/200ok", { timeout: 500 }, function(err, resp, body) {
+        xhr.head("/mock/200ok", function(err, resp, body) {
             assert.equal(resp.method, "HEAD")
             assert.end()
         })
@@ -306,14 +306,14 @@ if (!window.XDomainRequest) {
     })
 
     test("xhr.del url shorthand", { timeout: 500 }, function(assert) {
-        xhr.del("/mock/200ok", { timeout: 500 }, function(err, resp, body) {
+        xhr.del("/mock/200ok", function(err, resp, body) {
             assert.equal(resp.method, "DELETE")
             assert.end()
         })
     })
 }
 test("url signature without object", { timeout: 500 }, function(assert) {
-    xhr("/some-test", { timeout: 500 }, function(err, resp, body) {
+    xhr("/some-test", function(err, resp, body) {
         assert.equal(resp.url, '/some-test')
         assert.end()
     })
