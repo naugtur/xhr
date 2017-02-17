@@ -382,5 +382,5 @@ test("XHR can be overridden", { timeout: 500 }, function(assert) {
 
 test('close browser after everything', function(assert) {
     assert.end()
-    window.close()
+    setTimeout(window.close,100)
 })
