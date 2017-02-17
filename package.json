@@ -1,6 +1,6 @@
 {
   "name": "xhr",
-  "version": "2.3.1",
+  "version": "2.3.3",
   "description": "small xhr abstraction",
   "keywords": [
     "xhr",
@@ -10,17 +10,21 @@
     "browserify"
   ],
   "author": "Raynos <raynos2@gmail.com>",
-  "repository": "git://github.com/Raynos/xhr.git",
+  "repository": "git://github.com/naugtur/xhr.git",
   "main": "index",
-  "homepage": "https://github.com/Raynos/xhr",
+  "homepage": "https://github.com/naugtur/xhr",
   "contributors": [
     {
       "name": "Jake Verbaten"
+    },
+    {
+      "name": "Zbyszek Tenerowicz",
+      "email": "naugtur@gmail.com"
     }
   ],
   "bugs": {
-    "url": "https://github.com/Raynos/xhr/issues",
-    "email": "raynos2@gmail.com"
+    "url": "https://github.com/naugtur/xhr/issues",
+    "email": "naugtur@gmail.com"
   },
   "dependencies": {
     "global": "~4.3.0",
