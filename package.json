@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "for-each": "^0.3.2",
-    "pre-commit": "1.0.10",
+    "pre-commit": "1.2.2",
     "run-browser": "naugtur/run-browser",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
