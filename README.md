@@ -1,5 +1,7 @@
 # xhr
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/naugtur/xhr.svg)](https://greenkeeper.io/)
+
 A small XMLHttpRequest wrapper. Designed for use with [browserify](http://browserify.org/), [webpack](https://webpack.github.io/) etc.
 
 API is a subset of [request](https://github.com/request/request) so you can write code that works in both node.js and the browser by using `require('request')` in your code and telling your browser bundler to load `xhr` instead of `request`.
