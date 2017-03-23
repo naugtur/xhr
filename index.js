@@ -166,7 +166,7 @@ function _createXHR(options) {
     xhr.onreadystatechange = readystatechange
     xhr.onload = loadFunc
     xhr.onerror = function () {
-        errorFunc(new Error('Network failure'))
+        errorFunc(new Error('Unknown XMLHttpRequest Error'))
     }
     // IE9 must have onprogress be set to a unique function.
     xhr.onprogress = function () {
@@ -176,7 +176,7 @@ function _createXHR(options) {
         aborted = true;
     }
     xhr.ontimeout = function () {
-        errorFunc(new Error('Timeout'))
+        errorFunc(new Error('XMLHttpRequest Timeout'))
     }
     xhr.open(method, uri, !sync, options.username, options.password)
     //has to be after open
