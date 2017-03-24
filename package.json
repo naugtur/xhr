@@ -34,10 +34,9 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "browser-run": "^3.4.0",
+    "browser-run": "3.5.0",
     "browserify": "^13.1.1",
     "pre-commit": "1.2.2",
-    "run-browser": "naugtur/run-browser",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
   },
