@@ -4,6 +4,12 @@ var forEach = require("for-each")
 
 var xhr = require("../index.js")
 
+test("tests are run from http protocol", { timeout: 500 }, function(assert) {
+    console.log(window.origin, window.location)
+    assert.notEqual(window.location.protocol, "file:")
+    assert.end()
+})
+
 test("constructs and calls callback without throwing", { timeout: 500 }, function(assert) {
     xhr({}, function(err, resp, body) {
         assert.ok(true, "got here")
