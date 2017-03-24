@@ -24,7 +24,9 @@ For webpack, add a [resolve.alias](http://webpack.github.io/docs/configuration.h
 }
 ```
 
-Browser support: IE8+ and everything else.
+Browser support: IE10+ and everything else.
+
+IE8 and IE9 support was dropped as of v3.0.0 but you can still use v2 in IEs just fine. See v2 documentation for details.
 
 ## Example
 
@@ -46,7 +48,6 @@ xhr({
 
 ```js
 type XhrOptions = String | {
-    useXDR: Boolean?,
     sync: Boolean?,
     uri: String,
     url: String,
@@ -63,9 +64,7 @@ type XhrOptions = String | {
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
-the returned object is either an [`XMLHttpRequest`][3] instance
-    or an [`XDomainRequest`][4] instance (if on IE8/IE9 &&
-    `options.useXDR` is set to `true`)
+the returned object is an [`XMLHttpRequest`][3] instance
 
 Your callback will be called once with the arguments
     ( [`Error`][5], `response` , `body` ) where the response is an object:
@@ -82,8 +81,6 @@ Your callback will be called once with the arguments
  - `body`: HTTP response body - [`XMLHttpRequest.response`][6], [`XMLHttpRequest.responseText`][7] or
     [`XMLHttpRequest.responseXML`][8] depending on the request type.
  - `rawRequest`: Original  [`XMLHttpRequest`][3] instance
-    or [`XDomainRequest`][4] instance (if on IE8/IE9 &&
-    `options.useXDR` is set to `true`)
  - `headers`: A collection of headers where keys are header names converted to lowercase
 
 
@@ -128,14 +125,6 @@ xhr.del('/delete-me', { headers: { my: 'auth' } }, function (err, resp) {
 
 Specify the method the [`XMLHttpRequest`][3] should be opened
     with. Passed to [`XMLHttpRequest.open`][2]. Defaults to "GET"
-
-### `options.useXDR`
-
-Specify whether this is a cross origin (CORS) request for IE<10.
-    Switches IE to use [`XDomainRequest`][4] instead of `XMLHttpRequest`.
-    Ignored in other browsers.
-
-Note that headers cannot be set on an XDomainRequest instance.
 
 ### `options.sync`
 
@@ -191,7 +180,7 @@ A function being called right before the `send` method of the `XMLHttpRequest` o
 
 ### `options.xhr`
 
-Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` or `XDomainRequest` constructors. Useful for testing.
+Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` constructor. Useful for testing.
 
 ## FAQ
 
@@ -204,8 +193,6 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
    `options.json:true` with `options.body` for convenience - then `xhr` will do the serialization and set content-type accordingly.
 - Where's stream API? `.pipe()` etc.
   - Not implemented. You can't reasonably have that in the browser.
-- Why can't I send `"true"` as body by passing it as `options.json` anymore?
-  - Accepting `true` as a value was a bug. Despite what `JSON.stringify` does, the string `"true"` is not valid JSON. If you're sending booleans as JSON, please consider wrapping them in an object or array to save yourself from more trouble in the future. To bring back the old behavior, hardcode `options.json` to `true` and set `options.body` to your boolean value.
 - How do I add an `onprogress` listener?
   - use `beforeSend` function for non-standard things that are browser specific. In this case:
   ```js
@@ -228,7 +215,6 @@ or you can override the constructors used to create requests at the module level
 
 ```js
 xhr.XMLHttpRequest = MockXMLHttpRequest
-xhr.XDomainRequest = MockXDomainRequest
 ```
 
 ## MIT Licenced
@@ -236,7 +222,6 @@ xhr.XDomainRequest = MockXDomainRequest
   [1]: http://xhr.spec.whatwg.org/#the-send()-method
   [2]: http://xhr.spec.whatwg.org/#the-open()-method
   [3]: http://xhr.spec.whatwg.org/#interface-xmlhttprequest
-  [4]: http://msdn.microsoft.com/en-us/library/ie/cc288060(v=vs.85).aspx
   [5]: http://es5.github.com/#x15.11
   [6]: http://xhr.spec.whatwg.org/#the-response-attribute
   [7]: http://xhr.spec.whatwg.org/#the-responsetext-attribute

@@ -6,28 +6,14 @@ var xtend = require("xtend")
 
 module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
-createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
 
-forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method) {
+"get,put,post,patch,head,delete".split(",").map(function(method) {
     createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
         options = initParams(uri, options, callback)
         options.method = method.toUpperCase()
         return _createXHR(options)
     }
 })
-
-function forEachArray(array, iterator) {
-    for (var i = 0; i < array.length; i++) {
-        iterator(array[i])
-    }
-}
-
-function isEmpty(obj){
-    for(var i in obj){
-        if(obj.hasOwnProperty(i)) return false
-    }
-    return true
-}
 
 function initParams(uri, options, callback) {
     var params = uri
@@ -38,6 +24,7 @@ function initParams(uri, options, callback) {
             params = {uri:uri}
         }
     } else {
+        // xtend creates a shallow copy of options
         params = xtend(options, {uri: uri})
     }
 
@@ -102,12 +89,7 @@ function _createXHR(options) {
         if (aborted) return
         var status
         clearTimeout(timeoutTimer)
-        if(options.useXDR && xhr.status===undefined) {
-            //IE8 CORS GET successful response doesn't have a status field, but body is fine
-            status = 200
-        } else {
-            status = (xhr.status === 1223 ? 204 : xhr.status)
-        }
+        status = (xhr.status === 1223 ? 204 : xhr.status)
         var response = failureResponse
         var err = null
 
@@ -120,24 +102,14 @@ function _createXHR(options) {
                 url: uri,
                 rawRequest: xhr
             }
-            if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
-                response.headers = parseHeaders(xhr.getAllResponseHeaders())
-            }
+            response.headers = parseHeaders(xhr.getAllResponseHeaders())
         } else {
             err = new Error("Internal XMLHttpRequest Error")
         }
         return callback(err, response, response.body)
     }
 
-    var xhr = options.xhr || null
-
-    if (!xhr) {
-        if (options.cors || options.useXDR) {
-            xhr = new createXHR.XDomainRequest()
-        }else{
-            xhr = new createXHR.XMLHttpRequest()
-        }
-    }
+    var xhr = options.xhr || (new createXHR.XMLHttpRequest())
 
     var key
     var aborted
@@ -157,22 +129,18 @@ function _createXHR(options) {
         rawRequest: xhr
     }
 
-    if ("json" in options && options.json !== false) {
+    if (options.json) {
         isJson = true
         headers["accept"] || headers["Accept"] || (headers["Accept"] = "application/json") //Don't override existing accept header declared by user
         if (method !== "GET" && method !== "HEAD") {
             headers["content-type"] || headers["Content-Type"] || (headers["Content-Type"] = "application/json") //Don't override existing accept header declared by user
-            body = JSON.stringify(options.json === true ? body : options.json)
+            body = JSON.stringify(body)
         }
     }
 
     xhr.onreadystatechange = readystatechange
     xhr.onload = loadFunc
     xhr.onerror = errorFunc
-    // IE9 must have onprogress be set to a unique function.
-    xhr.onprogress = function () {
-        // IE must die
-    }
     xhr.onabort = function(){
         aborted = true;
     }
@@ -188,7 +156,7 @@ function _createXHR(options) {
     if (!sync && options.timeout > 0 ) {
         timeoutTimer = setTimeout(function(){
             if (aborted) return
-            aborted = true//IE9 may still call readystatechange
+            aborted = true //browser may still call readystatechange
             xhr.abort("timeout")
             var e = new Error("XMLHttpRequest timeout")
             e.code = "ETIMEDOUT"
@@ -196,14 +164,10 @@ function _createXHR(options) {
         }, options.timeout )
     }
 
-    if (xhr.setRequestHeader) {
-        for(key in headers){
-            if(headers.hasOwnProperty(key)){
-                xhr.setRequestHeader(key, headers[key])
-            }
+    for(key in headers){
+        if(headers.hasOwnProperty(key)){
+            xhr.setRequestHeader(key, headers[key])
         }
-    } else if (options.headers && !isEmpty(options.headers)) {
-        throw new Error("Headers cannot be set on an XDomainRequest object")
     }
 
     if ("responseType" in options) {

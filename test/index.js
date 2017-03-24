@@ -1,6 +1,5 @@
 var window = require("global/window")
 var test = require("tape")
-var forEach = require("for-each")
 
 var xhr = require("../index.js")
 
@@ -13,8 +12,7 @@ test("constructs and calls callback without throwing", { timeout: 500 }, functio
 
 test("[func] Can GET a url (cross-domain)", { timeout: 2000 }, function(assert) {
     xhr({
-        uri: "http://www.mocky.io/v2/55a02cb72651260b1a94f024",
-        useXDR: true
+        uri: "http://www.mocky.io/v2/55a02cb72651260b1a94f024"
     }, function(err, resp, body) {
         assert.ifError(err, "no err")
         assert.equal(resp.statusCode, 200)
@@ -27,23 +25,19 @@ test("[func] Can GET a url (cross-domain)", { timeout: 2000 }, function(assert) 
 })
 
 test("[func] Returns http error responses like npm's request (cross-domain)", { timeout: 2000 }, function(assert) {
-    if (!window.XDomainRequest) {
-        xhr({
-            uri: "http://www.mocky.io/v2/55a02d63265126221a94f025",
-        }, function(err, resp, body) {
-            assert.ifError(err, "no err")
-            assert.equal(resp.statusCode, 404)
-            assert.equal(typeof resp.rawRequest, "object")
-            assert.end()
-        })
-    } else {
-        assert.end();
-    }
+      xhr({
+          uri: "http://www.mocky.io/v2/55a02d63265126221a94f025"
+      }, function(err, resp, body) {
+          assert.ifError(err, "no err")
+          assert.equal(resp.statusCode, 404)
+          assert.equal(typeof resp.rawRequest, "object")
+          assert.end()
+      })
 })
 
 test("[func] Request to domain with not allowed cross-domain", { timeout: 2000 }, function(assert) {
     xhr({
-        uri: "http://www.mocky.io/v2/57bb70c21000002f175850bd",
+        uri: "http://www.mocky.io/v2/57bb70c21000002f175850bd"
     }, function(err, resp, body) {
         assert.ok(err instanceof Error, "should return error")
         assert.equal(resp.statusCode, 0)
@@ -115,57 +109,28 @@ test("[func] Times out to an error ", { timeout: 500 }, function(assert) {
 })
 
 test("withCredentials option", { timeout: 500 }, function(assert) {
-    if (!window.XDomainRequest) {
-        var req = xhr({}, function() {})
-        assert.ok(!req.withCredentials,
-            "withCredentials not true"
-        )
-        req = xhr({
-            withCredentials: true
-        }, function() {})
-        assert.ok(
-            req.withCredentials,
-            "withCredentials set to true"
-        )
-    }
+      var req = xhr({}, function() {})
+      assert.ok(!req.withCredentials,
+          "withCredentials not true"
+      )
+      req = xhr({
+          withCredentials: true
+      }, function() {})
+      assert.ok(
+          req.withCredentials,
+          "withCredentials set to true"
+      )
     assert.end()
 })
 
 test("withCredentials ignored when using synchronous requests", { timeout: 500 }, function(assert) {
-    if (!window.XDomainRequest) {
-        var req = xhr({
-            withCredentials: true,
-            sync: true
-        }, function() {})
-        assert.ok(!req.withCredentials,
-            "sync overrides withCredentials"
-        )
-    }
-    assert.end()
-})
-
-test("XDR usage (run on IE8 or 9)", { timeout: 500 }, function(assert) {
-    var req = xhr({
-        useXDR: true,
-        uri: window.location.href,
-    }, function() {})
-
-    assert.ok(!window.XDomainRequest || window.XDomainRequest === req.constructor,
-        "Uses XDR when told to"
-    )
-
-
-    if (!!window.XDomainRequest) {
-        assert.throws(function() {
-            xhr({
-                useXDR: true,
-                uri: window.location.href,
-                headers: {
-                    "foo": "bar"
-                }
-            }, function() {})
-        }, true, "Throws when trying to send headers with XDR")
-    }
+      var req = xhr({
+          withCredentials: true,
+          sync: true
+      }, function() {})
+      assert.ok(!req.withCredentials,
+          "sync overrides withCredentials"
+      )
     assert.end()
 })
 
@@ -188,16 +153,12 @@ test("constructs and calls callback without throwing", { timeout: 500 }, functio
     assert.end()
 })
 
-if (!window.XDomainRequest) {
-    var methods = ["get", "put", "post", "patch"]
-} else {
-    var methods = ["get", "post"]
-}
+var methods = ["get", "put", "post", "patch"]
 
 test("[func] xhr[method] get, put, post, patch", { timeout: 500 }, function(assert) {
     var i = 0
 
-    forEach(methods, function(method) {
+    methods.forEach(function(method) {
         xhr[method]({
             uri: "/mock/200ok"
         }, function(err, resp, body) {
@@ -212,7 +173,7 @@ test("[func] xhr[method] get, put, post, patch", { timeout: 500 }, function(asse
 
 test("xhr[method] get, put, post, patch with url shorthands", { timeout: 500 }, function(assert) {
     var i = 0
-    forEach(methods, function(method) {
+    methods.forEach(function(method) {
         var req = xhr[method]("/some-test", function() {})
         i++
         assert.equal(req.method, method.toUpperCase())
@@ -247,23 +208,21 @@ test("[func] doesn't freak out when json option is false", { timeout: 500 }, fun
     })
 })
 
-test("[func] sends options.json as body when it's not a boolean", { timeout: 500 }, function(assert) {
+test("[func] DO NOT send options.json as body when it's not a boolean", { timeout: 500 }, function(assert) {
     xhr.post("/mock/echo", {
         json: {
             foo: "bar"
         }
     }, function(err, resp, body) {
         assert.equal(resp.rawRequest.headers["Content-Type"], "application/json")
-        assert.deepEqual(body, {
-            foo: "bar"
-        })
+        assert.equal(body, null)
         assert.end()
     })
 })
 
 test("xhr[method] get, put, post, patch with url shorthands and options", { timeout: 500 }, function(assert) {
     var i = 0
-    forEach(methods, function(method) {
+    methods.forEach(function(method) {
         var req = xhr[method]("/some-test", {
             headers: {
                 foo: 'bar'
@@ -277,44 +236,44 @@ test("xhr[method] get, put, post, patch with url shorthands and options", { time
         })
     })
 })
-if (!window.XDomainRequest) {
-    test("[func] xhr.head", function(assert) {
-        xhr.head({
-            uri: "/mock/200ok",
-        }, function(err, resp, body) {
-            assert.ifError(err, "no err")
-            assert.equal(resp.statusCode, 200)
-            assert.equal(resp.method, "HEAD")
-            assert.notOk(resp.body)
-            assert.end()
-        })
-    })
 
-    test("xhr.head url shorthand", { timeout: 500 }, function(assert) {
-        xhr.head("/mock/200ok", function(err, resp, body) {
-            assert.equal(resp.method, "HEAD")
-            assert.end()
-        })
+test("[func] xhr.head", function(assert) {
+    xhr.head({
+        uri: "/mock/200ok",
+    }, function(err, resp, body) {
+        assert.ifError(err, "no err")
+        assert.equal(resp.statusCode, 200)
+        assert.equal(resp.method, "HEAD")
+        assert.notOk(resp.body)
+        assert.end()
     })
+})
 
-    test("[func] xhr.del", { timeout: 500 }, function(assert) {
-        xhr.del({
-            uri: "/mock/200ok"
-        }, function(err, resp, body) {
-            assert.ifError(err, "no err")
-            assert.equal(resp.statusCode, 200)
-            assert.equal(resp.method, "DELETE")
-            assert.end()
-        })
+test("xhr.head url shorthand", { timeout: 500 }, function(assert) {
+    xhr.head("/mock/200ok", function(err, resp, body) {
+        assert.equal(resp.method, "HEAD")
+        assert.end()
     })
+})
 
-    test("xhr.del url shorthand", { timeout: 500 }, function(assert) {
-        xhr.del("/mock/200ok", function(err, resp, body) {
-            assert.equal(resp.method, "DELETE")
-            assert.end()
-        })
+test("[func] xhr.del", { timeout: 500 }, function(assert) {
+    xhr.del({
+        uri: "/mock/200ok"
+    }, function(err, resp, body) {
+        assert.ifError(err, "no err")
+        assert.equal(resp.statusCode, 200)
+        assert.equal(resp.method, "DELETE")
+        assert.end()
     })
-}
+})
+
+test("xhr.del url shorthand", { timeout: 500 }, function(assert) {
+    xhr.del("/mock/200ok", function(err, resp, body) {
+        assert.equal(resp.method, "DELETE")
+        assert.end()
+    })
+})
+
 test("url signature without object", { timeout: 500 }, function(assert) {
     xhr("/some-test", function(err, resp, body) {
         assert.equal(resp.url, '/some-test')
@@ -363,20 +322,11 @@ test("XHR can be overridden", { timeout: 500 }, function(assert) {
         xhrs++
         this.open = this.send = noop
     }
-    var xdrs = 0
-    var fakeXDR = function() {
-        xdrs++
-        this.open = this.send = noop
-    }
+
     xhr.XMLHttpRequest = fakeXHR
     xhr({}, function() {})
     assert.equal(xhrs, 1, "created the custom XHR")
 
-    xhr.XDomainRequest = fakeXDR
-    xhr({
-        useXDR: true
-    }, function() {});
-    assert.equal(xdrs, 1, "created the custom XDR")
     assert.end()
 })
 
