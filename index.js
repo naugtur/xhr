@@ -7,6 +7,7 @@ var xtend = require("xtend")
 module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
 createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
+createXHR.queryStringStringify = null // Define this as a function to support the `qs` option
 
 forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method) {
     createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
@@ -139,9 +140,17 @@ function _createXHR(options) {
         }
     }
 
+    var qsStringifyDefined = isFunction(createXHR.queryStringStringify);
+
+    if (options.qs && !qsStringifyDefined) {
+      throw new Error("You passed a 'qs' option, but did not define an 'xhr.queryStringStringify' function.\nYou must either omit the 'qs' option, or define 'xhr.queryStringStringify'.")
+    }
+
+    var qs = options.qs && qsStringifyDefined ? '?' + createXHR.queryStringStringify(options.qs) : '';
+
     var key
     var aborted
-    var uri = xhr.url = options.uri || options.url
+    var uri = xhr.url = (options.uri || options.url) + qs
     var method = xhr.method = options.method || "GET"
     var body = options.body || options.data
     var headers = xhr.headers = options.headers || {}
