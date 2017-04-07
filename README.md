@@ -197,10 +197,10 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
 ### `options.qs`
 
 A value to be transformed into a query string. This library does not provide
-a parser for `options.qs` out of the box: you must define it yourself as
-`xhr.queryStringStringify`.
+a serializer for `options.qs` out of the box: you must define it yourself as
+`xhr.qsSerialize`.
 
-If `options.qs` is defined, and `xhr.queryStringStringify` is not, then an
+If `options.qs` is defined, and `xhr.qsSerialize` is not, then an
 Error will be thrown.
 
 For more, see [Query string support](#query-string-support).
@@ -250,18 +250,18 @@ There are many ways to stringify query parameters; consequently, `xhr` makes no
 assumptions about how to handle them, and does not support the `qs` option out
 of the box.
 
-To support the `qs` option, you must define an `xhr.queryStringStringify`
-function. This function accepts the value of `options.qs` as its first argument,
-and returns a string that is appended to the URL.
+To support the `qs` option, define an `xhr.qsSerialize` function. This function
+accepts the value of `options.qs` as its first argument, and returns a string
+that is appended to the URL.
 
 You do not need to include a leading "?" in the value that you return from
-`xhr.queryStringStringify`.
+`xhr.qsSerialize`.
 
 ```js
 var xhr = require('xhr')
 var qs = require('qs')
 
-xhr.queryStringStringify = qs.stringify
+xhr.qsSerialize = qs.stringify
 
 xhr.get('/foo', {
   qs: {

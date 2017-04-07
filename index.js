@@ -7,7 +7,7 @@ var xtend = require("xtend")
 module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
 createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
-createXHR.queryStringStringify = null // Define this as a function to support the `qs` option
+createXHR.qsSerialize = null // Define this as a function to support the `qs` option
 
 forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method) {
     createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
@@ -140,13 +140,13 @@ function _createXHR(options) {
         }
     }
 
-    var qsStringifyDefined = isFunction(createXHR.queryStringStringify);
+    var qsStringifyDefined = isFunction(createXHR.qsSerialize);
 
     if (options.qs && !qsStringifyDefined) {
-      throw new Error("You passed a 'qs' option, but did not define an 'xhr.queryStringStringify' function.\nYou must either omit the 'qs' option, or define 'xhr.queryStringStringify'.")
+      throw new Error("To use the 'qs' option, first define an 'xhr.qsSerialize' function.")
     }
 
-    var qs = options.qs && qsStringifyDefined ? '?' + createXHR.queryStringStringify(options.qs) : '';
+    var qs = options.qs && qsStringifyDefined ? '?' + createXHR.qsSerialize(options.qs) : ''
 
     var key
     var aborted
