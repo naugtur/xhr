@@ -40,7 +40,7 @@ function createXHR(uri, options, callback) {
 
 function _createXHR(options) {
     if(typeof options.callback === "undefined"){
-        throw new Error("callback argument missing")
+        throw Error("callback argument missing")
     }
 
     var called = false
@@ -79,7 +79,7 @@ function _createXHR(options) {
     function errorFunc(evt) {
         clearTimeout(timeoutTimer)
         if(!(evt instanceof Error)){
-            evt = new Error("" + (evt || "Unknown XMLHttpRequest Error") )
+            evt = Error("" + (evt || "Unknown XMLHttpRequest Error") )
         }
         evt.statusCode = 0
         return callback(evt, failureResponse)
@@ -105,7 +105,7 @@ function _createXHR(options) {
             }
             response.headers = parseHeaders(xhr.getAllResponseHeaders())
         } else {
-            err = new Error("Internal XMLHttpRequest Error")
+            err = Error("Internal XMLHttpRequest Error")
         }
         return callback(err, response, response.body)
     }
@@ -115,7 +115,7 @@ function _createXHR(options) {
     var qsStringifyDefined = isFunction(createXHR.qsSerialize);
 
     if (options.qs && !qsStringifyDefined) {
-      throw new Error("To use the 'qs' option, first define an 'xhr.qsSerialize' function.")
+      throw Error("To use the 'qs' option, first define an 'xhr.qsSerialize' function.")
     }
 
     var qs = options.qs && qsStringifyDefined ? '?' + createXHR.qsSerialize(options.qs) : ''
@@ -167,7 +167,7 @@ function _createXHR(options) {
             if (aborted) return
             aborted = true //browser may still call readystatechange
             xhr.abort("timeout")
-            var e = new Error("XMLHttpRequest timeout")
+            var e = Error("XMLHttpRequest timeout")
             e.code = "ETIMEDOUT"
             errorFunc(e)
         }, options.timeout )
