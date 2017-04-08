@@ -6,6 +6,7 @@ var xtend = require("xtend")
 
 module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
+createXHR.qsSerialize = null // Define this as a function to support the `qs` option
 
 "get,put,post,patch,head,delete".split(",").map(function(method) {
     createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
@@ -111,9 +112,17 @@ function _createXHR(options) {
 
     var xhr = options.xhr || (new createXHR.XMLHttpRequest())
 
+    var qsStringifyDefined = isFunction(createXHR.qsSerialize);
+
+    if (options.qs && !qsStringifyDefined) {
+      throw new Error("To use the 'qs' option, first define an 'xhr.qsSerialize' function.")
+    }
+
+    var qs = options.qs && qsStringifyDefined ? '?' + createXHR.qsSerialize(options.qs) : ''
+
     var key
     var aborted
-    var uri = xhr.url = options.uri || options.url
+    var uri = xhr.url = (options.uri || options.url) + qs
     var method = xhr.method = options.method || "GET"
     var body = options.body || options.data
     var headers = xhr.headers = options.headers || {}

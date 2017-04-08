@@ -61,6 +61,7 @@ type XhrOptions = String | {
     withCredentials: Boolean?,
     responseType: String?,
     beforeSend: Function?
+    qs: Any?
 }
 xhr := (XhrOptions, Callback<Response>) => Request
 ```
@@ -182,6 +183,17 @@ A function being called right before the `send` method of the `XMLHttpRequest` o
 
 Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` constructor. Useful for testing.
 
+### `options.qs`
+
+A value to be transformed into a query string. This library does not provide
+a serializer for `options.qs` out of the box: you must define it yourself as
+`xhr.qsSerialize`.
+
+If `options.qs` is defined, and `xhr.qsSerialize` is not, then an
+Error will be thrown.
+
+For more, see [Query string support](#query-string-support).
+
 ## FAQ
 
 - Why is my server's JSON response not parsed? I returned the right content-type.
@@ -203,6 +215,8 @@ xhr({
   }
 })
 ```
+- How can I support query strings?
+  - See [Query string support](#query-string-support)
 
 ## Mocking Requests
 You can override the constructor used to create new requests for testing. When you're making a new request:
@@ -215,6 +229,31 @@ or you can override the constructors used to create requests at the module level
 
 ```js
 xhr.XMLHttpRequest = MockXMLHttpRequest
+```
+
+## Query string support
+There are many ways to stringify query parameters; consequently, `xhr` makes no
+assumptions about how to handle them, and does not support the `qs` option out
+of the box.
+
+To support the `qs` option, define an `xhr.qsSerialize` function. This function
+accepts the value of `options.qs` as its first argument, and returns a string
+that is appended to the URL.
+
+You do not need to include a leading "?" in the value that you return from
+`xhr.qsSerialize`.
+
+```js
+var xhr = require('xhr')
+var qs = require('qs')
+
+xhr.qsSerialize = qs.stringify
+
+xhr.get('/foo', {
+  qs: {
+    bar: true
+  }
+})
 ```
 
 ## MIT Licenced
