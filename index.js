@@ -97,6 +97,10 @@ function _createXHR(options) {
         return callback(evt, failureResponse)
     }
 
+    function serialize_params(obj) {
+        return Object.keys(obj).map( function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]) } ).join('&')
+    }
+
     // will load the data & process the response in a special response object
     function loadFunc() {
         if (aborted) return
@@ -164,6 +168,8 @@ function _createXHR(options) {
             headers["content-type"] || headers["Content-Type"] || (headers["Content-Type"] = "application/json") //Don't override existing accept header declared by user
             body = JSON.stringify(options.json === true ? body : options.json)
         }
+    } else if (body !== null && typeof body === 'object') {
+        body = serialize_params(body)
     }
 
     xhr.onreadystatechange = readystatechange
