@@ -27,7 +27,6 @@
     "email": "naugtur@gmail.com"
   },
   "dependencies": {
-    "browserify": "^13.3.0",
     "global": "~4.3.0",
     "is-function": "^1.0.1",
     "parse-headers": "^2.0.0",
@@ -35,7 +34,7 @@
   },
   "devDependencies": {
     "browser-run": "3.5.0",
-    "browserify": "^13.1.1",
+    "browserify": "^13.3.0",
     "pre-commit": "1.2.2",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
