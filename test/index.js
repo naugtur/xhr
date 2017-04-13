@@ -4,6 +4,12 @@ var forEach = require("for-each")
 
 var xhr = require("../index.js")
 
+test("tests are run from http protocol", { timeout: 500 }, function(assert) {
+    console.log(window.origin, window.location)
+    assert.notEqual(window.location.protocol, "file:")
+    assert.end()
+})
+
 test("constructs and calls callback without throwing", { timeout: 500 }, function(assert) {
     xhr({}, function(err, resp, body) {
         assert.ok(true, "got here")
@@ -84,8 +90,11 @@ test("[func] Returns a falsy body for 2xx responses", { timeout: 500 }, function
 test("[func] Calls the callback at most once even if error is thrown issue #127", { timeout: 500 }, function(assert) {
     //double call happened in chrome
     var count = 0;
+    var onerror = window.onerror
+    window.onerror = console.error.bind(console)
     setTimeout(function() {
         assert.ok(count <= 1, "expected at most one call")
+        window.onerror = onerror
         assert.end()
     }, 100)
     try {
@@ -375,4 +384,9 @@ test("XHR can be overridden", { timeout: 500 }, function(assert) {
     }, function() {});
     assert.equal(xdrs, 1, "created the custom XDR")
     assert.end()
+})
+
+test('close browser after everything', function(assert) {
+    assert.end()
+    setTimeout(window.close,100)
 })

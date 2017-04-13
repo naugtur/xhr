@@ -27,21 +27,23 @@
     "email": "naugtur@gmail.com"
   },
   "dependencies": {
+    "browserify": "^13.3.0",
     "global": "~4.3.0",
     "is-function": "^1.0.1",
     "parse-headers": "^2.0.0",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
+    "browser-run": "3.5.0",
+    "browserify": "^13.1.1",
     "for-each": "^0.3.2",
     "pre-commit": "1.2.2",
-    "run-browser": "naugtur/run-browser",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
   },
   "license": "MIT",
   "scripts": {
-    "test": "run-browser test/index.js -b -m test/mock-server.js | tap-spec",
-    "browser": "run-browser -m test/mock-server.js test/index.js"
+    "test": "browserify test/index.js | browser-run -m test/mock-server.js | tap-spec",
+    "browser": "browserify test/index.js | browser-run -p 8080 -m test/mock-server.js | tap-spec"
   }
 }
