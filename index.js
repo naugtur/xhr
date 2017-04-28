@@ -90,7 +90,7 @@ function _createXHR(options) {
         if (aborted) return
         var status
         clearTimeout(timeoutTimer)
-        status = (xhr.status === 1223 ? 204 : xhr.status)
+        status = xhr.status
         var response = failureResponse
         var err = null
 
