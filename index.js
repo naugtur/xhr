@@ -8,7 +8,8 @@ module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
 createXHR.qsSerialize = null // Define this as a function to support the `qs` option
 
-"get,put,post,patch,head,delete".split(",").map(function(method) {
+;
+["get","put","post","patch","head","delete"].map(function(method) {
     createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
         options = initParams(uri, options, callback)
         options.method = method.toUpperCase()
