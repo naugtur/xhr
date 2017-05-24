@@ -211,13 +211,13 @@ Pass an `XMLHttpRequest` object (or something that acts like one) to use instead
 - How do I add an `onprogress` listener?
   - use `beforeSend` function for non-standard things that are browser specific. In this case:
   ```js
-xhr({
-...
-  beforeSend: function(xhrObject){
-    xhrObject.onprogress = function(){}
-  }
-})
-```
+  xhr({
+    ...
+    beforeSend: function(xhrObject){
+      xhrObject.onprogress = function(){}
+    }
+  })
+  ```
 
 ## Mocking Requests
 You can override the constructor used to create new requests for testing. When you're making a new request:
