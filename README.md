@@ -28,6 +28,12 @@ For webpack, add a [resolve.alias](http://webpack.github.io/docs/configuration.h
 
 Browser support: IE8+ and everything else.
 
+## Installation
+
+```
+npm i xhr
+```
+
 ## Example
 
 ```js
