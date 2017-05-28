@@ -31,7 +31,7 @@ Browser support: IE8+ and everything else.
 ## Installation
 
 ```
-npm i xhr
+npm install xhr
 ```
 
 ## Example
@@ -40,6 +40,7 @@ npm i xhr
 var xhr = require("xhr")
 
 xhr({
+    method: "post"
     body: someJSONString,
     uri: "/foo",
     headers: {
