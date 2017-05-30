@@ -202,6 +202,12 @@ A function being called right before the `send` method of the `XMLHttpRequest` o
 
 Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` or `XDomainRequest` constructors. Useful for testing.
 
+### `options.ignoreHeadersWhenXDR`
+
+Specify whether it is (or is not) an error to pass HTTP headers in a cross origin (CORS) request for IE<10.
+    When _not_ present, passing HTTP headers to `xhr` when `useXDR` is truthy on IE<10 will result in an
+    error being thrown.  When `ignoreHeadersWhenXDR` is present an error will _not_ be thrown.
+
 ## FAQ
 
 - Why is my server's JSON response not parsed? I returned the right content-type.

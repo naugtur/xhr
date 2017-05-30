@@ -203,7 +203,9 @@ function _createXHR(options) {
             }
         }
     } else if (options.headers && !isEmpty(options.headers)) {
-        throw new Error("Headers cannot be set on an XDomainRequest object")
+        if (('ignoreHeadersWhenXDR' in options) == false || !!!options.ignoreHeadersWhenXDR) {
+            throw new Error("Headers cannot be set on an XDomainRequest object")
+        }
     }
 
     if ("responseType" in options) {
