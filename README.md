@@ -40,7 +40,7 @@ npm install xhr
 var xhr = require("xhr")
 
 xhr({
-    method: "post"
+    method: "post",
     body: someJSONString,
     uri: "/foo",
     headers: {
