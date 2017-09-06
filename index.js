@@ -230,10 +230,14 @@ function getXml(xhr) {
     if (xhr.responseType === "document") {
         return xhr.responseXML
     }
-    var firefoxBugTakenEffect = xhr.responseXML && xhr.responseXML.documentElement.nodeName === "parsererror"
-    if (xhr.responseType === "" && !firefoxBugTakenEffect) {
-        return xhr.responseXML
-    }
+    try {
+      // xhr.responseXML will throw Exception "InvalidStateError".
+      // See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseXML.
+      var firefoxBugTakenEffect = xhr.responseXML && xhr.responseXML.documentElement.nodeName === "parsererror"
+      if (xhr.responseType === "" && !firefoxBugTakenEffect) {
+          return xhr.responseXML
+      }
+    } catch (e) {}
 
     return null
 }
