@@ -227,16 +227,16 @@ function _createXHR(options) {
 }
 
 function getXml(xhr) {
-    if (xhr.responseType === "document") {
-        return xhr.responseXML
-    }
+    // xhr.responseXML will throw Exception "InvalidStateError" or "DOMException"
+    // See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseXML.
     try {
-      // xhr.responseXML will throw Exception "InvalidStateError".
-      // See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseXML.
-      var firefoxBugTakenEffect = xhr.responseXML && xhr.responseXML.documentElement.nodeName === "parsererror"
-      if (xhr.responseType === "" && !firefoxBugTakenEffect) {
-          return xhr.responseXML
-      }
+        if (xhr.responseType === "document") {
+            return xhr.responseXML
+        }
+        var firefoxBugTakenEffect = xhr.responseXML && xhr.responseXML.documentElement.nodeName === "parsererror"
+        if (xhr.responseType === "" && !firefoxBugTakenEffect) {
+            return xhr.responseXML
+        }
     } catch (e) {}
 
     return null
