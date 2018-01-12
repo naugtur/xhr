@@ -24,7 +24,7 @@ export interface XhrBaseConfig {
   timeout?: number;
   headers?: XhrHeaders;
   body?: string | any;
-  json?: boolean | any;
+  json?: boolean;
   username?: string;
   password?: string;
   withCredentials?: boolean;
