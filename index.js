@@ -79,9 +79,6 @@ function _createXHR(options) {
 
     function errorFunc(evt) {
         clearTimeout(timeoutTimer)
-        if(!(evt instanceof Error)){
-            evt = Error("" + (evt || "Unknown XMLHttpRequest Error") )
-        }
         evt.statusCode = 0
         return callback(evt, failureResponse)
     }
@@ -150,11 +147,15 @@ function _createXHR(options) {
 
     xhr.onreadystatechange = readystatechange
     xhr.onload = loadFunc
-    xhr.onerror = errorFunc
+
+    xhr.onerror = errorFunc.bind({}, Error('Unknown XMLHttpRequest Error'))
+
     xhr.onabort = function(){
         aborted = true;
     }
-    xhr.ontimeout = errorFunc
+    
+    xhr.ontimeout = errorFunc.bind({}, Error('XMLHttpRequest Timeout'))
+
     xhr.open(method, uri, !sync, options.username, options.password)
     //has to be after open
     if(!sync) {
