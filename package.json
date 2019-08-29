@@ -1,5 +1,5 @@
 {
-  "name": "xhr",
+  "name": "@videojs/xhr",
   "version": "2.5.0",
   "description": "small xhr abstraction",
   "keywords": [

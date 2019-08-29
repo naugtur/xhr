@@ -12,7 +12,7 @@ For browserify, add a [browser](https://github.com/substack/node-browserify#brow
 
 ```
 "browser": {
-  "request": "xhr"
+  "request": "@videojs/xhr"
 }
 ```
 
@@ -21,7 +21,7 @@ For webpack, add a [resolve.alias](http://webpack.github.io/docs/configuration.h
 ```
 "resolve": {
   "alias": {
-    "request$": "xhr"
+    "request$": "@videojs/xhr"
   }
 }
 ```
@@ -31,13 +31,13 @@ Browser support: IE8+ and everything else.
 ## Installation
 
 ```
-npm install xhr
+npm install @videojs/xhr
 ```
 
 ## Example
 
 ```js
-var xhr = require("xhr")
+var xhr = require("@videojs/xhr")
 
 xhr({
     method: "post",
