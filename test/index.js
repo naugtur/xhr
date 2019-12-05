@@ -45,8 +45,8 @@ test("[func] Request to domain with not allowed cross-domain", { timeout: 2000 }
     xhr({
         uri: "http://www.mocky.io/v2/57bb70c21000002f175850bd",
     }, function(err, resp, body) {
-        assert.ok(err instanceof Error, "should return error")
-        assert.equal(resp.statusCode, 0)
+        assert.ok(err == null)
+        assert.equal(resp.statusCode, 500)
         assert.equal(typeof resp.rawRequest, "object")
         assert.end()
     })
