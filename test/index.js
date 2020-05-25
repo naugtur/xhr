@@ -43,10 +43,10 @@ test("[func] Returns http error responses like npm's request (cross-domain)", { 
 
 test("[func] Request to domain with not allowed cross-domain", { timeout: 2000 }, function(assert) {
     xhr({
-        uri: "http://www.mocky.io/v2/57bb70c21000002f175850bd",
+        uri: "http://google.com"
     }, function(err, resp, body) {
-        assert.ok(err == null)
-        assert.equal(resp.statusCode, 500)
+        assert.ok(err)
+        assert.equal(resp.statusCode, 0)
         assert.equal(typeof resp.rawRequest, "object")
         assert.end()
     })
