@@ -28,13 +28,15 @@
   },
   "typings": "./index.d.ts",
   "dependencies": {
+    "@lavamoat/preinstall-always-fail": "^2.1.0",
     "global": "~4.4.0",
-    "is-function": "^1.0.1",
-    "parse-headers": "^2.0.5",
+    "is-function": "^1.0.2",
+    "parse-headers": "^2.0.6",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "for-each": "^0.3.2",
+    "@lavamoat/allow-scripts": "^3.3.3",
+    "for-each": "^0.3.5",
     "pre-commit": "1.2.2",
     "run-browser": "naugtur/run-browser",
     "tap-spec": "^4.0.2",
@@ -44,5 +46,13 @@
   "scripts": {
     "test": "run-browser test/index.js -b -m test/mock-server.js | tap-spec",
     "browser": "run-browser -m test/mock-server.js test/index.js"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@lavamoat/preinstall-always-fail": false,
+      "pre-commit": true,
+      "pre-commit>spawn-sync": false,
+      "run-browser>puppeteer": true
+    }
   }
 }

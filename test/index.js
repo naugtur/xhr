@@ -13,7 +13,7 @@ test("constructs and calls callback without throwing", { timeout: 500 }, functio
 
 test("[func] Can GET a url (cross-domain)", { timeout: 2000 }, function(assert) {
     xhr({
-        uri: "http://www.mocky.io/v2/55a02cb72651260b1a94f024",
+        uri: "https://run.mocky.io/v3/4da3f78a-7060-4496-ab10-262fbab21683",
         useXDR: true
     }, function(err, resp, body) {
         assert.ifError(err, "no err")
@@ -30,7 +30,7 @@ test("[func] Can GET a url (cross-domain)", { timeout: 2000 }, function(assert) 
 test("[func] Returns http error responses like npm's request (cross-domain)", { timeout: 2000 }, function(assert) {
     if (!window.XDomainRequest) {
         xhr({
-            uri: "http://www.mocky.io/v2/55a02d63265126221a94f025",
+            uri: "https://run.mocky.io/v3/85edf45e-1510-4ec8-9d09-d5675b68001e",
         }, function(err, resp, body) {
             assert.ifError(err, "no err")
             assert.equal(resp.statusCode, 404)
